@@ -93,6 +93,8 @@ class CustomDataset(Dataset):
             return vid, video_feats, caption
         elif self.feature_mode == 'two':
             vid, image_video_feats, motion_video_feats, caption = self.data[idx]
+        elif self.feature_mode == 'three':
+            vid, image_video_feats, motion_video_feats, caption = self.data[idx]
 
             if self.transform_frame:
                 image_video_feats = [self.transform_frame(
@@ -155,6 +157,9 @@ class CustomDataset(Dataset):
                 elif i == 1:
                     self.motion_video_feats[vid].append(feats)
             fin.close()
+    def load_three_video_feats(self):
+        models = self.C.feat.model.split('_')[1].spilt('+')
+        print('Enter the load3 method---------------------------------')
 
     def load_captions(self):
         raise NotImplementedError("You should implement this function.")
@@ -176,6 +181,8 @@ class CustomDataset(Dataset):
                 for caption in self.captions[vid]:
                     self.data.append(
                         (vid, image_video_feats, motion_video_feats, caption))
+        elif self.feature_mode =='three':
+            self.load_two_video_feats()
         else:
             raise NotImplementedError(
                 "Unknown feature mode: {}".format(self.feature_mode))

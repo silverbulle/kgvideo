@@ -1,2 +1,6 @@
 *.hdf5
 *.ckpt
+*.pyc
+*.h5
+*logs_MSR-VTT*/
+*logs_MSVD*/

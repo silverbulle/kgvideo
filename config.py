@@ -20,7 +20,8 @@ class MSVDSplitConfig(object):
 
 
 class MSRVTTSplitConfig(object):
-    model = "MSR-VTT_ResNet152"
+    # model = "MSR-VTT_ResNet152"
+    model = "MSR-VTT_I3D"
 
     video_fpath = "../data/MSR-VTT/features/{}.hdf5".format(model)
     train_val_caption_fpath = "../data/MSR-VTT/metadata/train_val_videodatainfo.json"
@@ -39,7 +40,9 @@ class MSRVTTSplitConfig(object):
 class FeatureConfig(object):
     # model = "MSVD_InceptionV4"
     # model = "MSVD_ResNet152"
-    model = "MSR-VTT_ResNet152"
+    # model = "MSR-VTT_ResNet152"
+    model = "MSR-VTT_ResNet152+I3D"
+    # model = "MSR-VTT_ResNet152+I3D+OFeat"
     # model = "MSVD_ResNet152+I3D"
     # model = "MSVD_InceptionV4+I3D"
     # model = "MSVD_I3D"
@@ -61,6 +64,9 @@ class FeatureConfig(object):
     elif model == 'MSVD_InceptionV4+I3D' or model == 'MSR-VTT_InceptionV4+I3D':
         size = [1536, 1024]
         feature_mode = 'two'
+    elif model == 'MSR-VTT_ResNet152+I3D+OFeat':
+         size = [2048, 1024]
+         feature_mode = 'three'
     else:
         raise NotImplementedError("Unknown model: {}".format(model))
 
@@ -148,8 +154,8 @@ class TrainConfig(object):
         'MSVD': 30,
         'MSR-VTT': 30,
     }[corpus]
-    # batch_size = 32
-    batch_size = 64
+    batch_size = 32
+    # batch_size = 64
     shuffle = True
     optimizer = "AMSGrad"
     gradient_clip = 5.0  # None if not used
