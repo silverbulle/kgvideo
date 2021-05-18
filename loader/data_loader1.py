@@ -72,6 +72,7 @@ class CustomDataset(Dataset):
         elif self.feature_mode == 'two':
             self.image_video_feats = defaultdict(lambda: [])
             self.motion_video_feats = defaultdict(lambda: [])
+            self.object_video_feats = defaultdict(lambda: [])
 
         self.captions = defaultdict(lambda: [])
         self.data = []
@@ -149,7 +150,7 @@ class CustomDataset(Dataset):
 
                 # Sample fixed number of frames
                 sampled_idxs = np.linspace(
-                    0, len(feats) - 1, self.C.loader.frame_sample_len, dtype=int)
+                    0, len(feats) - 1, self.C.loader.frame_sample_len, dtype=int)  # return evenly sapced number within the specified
                 feats = feats[sampled_idxs]
                 assert len(feats) == self.C.loader.frame_sample_len
                 if i == 0:
@@ -157,9 +158,31 @@ class CustomDataset(Dataset):
                 elif i == 1:
                     self.motion_video_feats[vid].append(feats)
             fin.close()
+
     def load_three_video_feats(self):
         models = self.C.feat.model.split('_')[1].spilt('+')
         print('Enter the load3 method---------------------------------')
+        for i in range(len(models)):
+            fpath = self.C.loader.phase_video_feat_fpath_tpl.format(self.C.corpus, self.C.corpus + '_', models[i], self.phase)
+            fin = h5py.File(fpath, 'r')
+            for vid in fin.keys():
+                feats = fin[vid].value
+            if len(feats) < self.C.loader.frame_sample_len:
+                num_paddings = self.C.loader.frame_sample_len - len(feats)
+                feats = feats.tolist() + [np.zeros_like(feats[0])
+                                          for _ in range(num_paddings)]
+                feats = np.asarray(feats)
+                sampled_idxs = np.linspace(
+                    0, len(feats) - 1, self.C.loader.frame_sample_len, dtype=int)  # return evenly sapced number within the specified
+                feats = feats[sampled_idxs]
+                assert len(feats) == self.C.loader.frame_sample_len
+                if i == 1:
+                    self.image_video_feats[vid].append(feats)
+                elif i == 2:
+                    self.motion_video_feats[vid].append(feats)
+
+            fin.close()
+
 
     def load_captions(self):
         raise NotImplementedError("You should implement this function.")
@@ -181,8 +204,16 @@ class CustomDataset(Dataset):
                 for caption in self.captions[vid]:
                     self.data.append(
                         (vid, image_video_feats, motion_video_feats, caption))
-        elif self.feature_mode =='three':
-            self.load_two_video_feats()
+        elif self.feature_mode == 'three':
+            self.load_three_video_feats()
+            assert self.image_video_feats.keys() == self.object_video_feats.keys(), "Image feats is not match with object feats"
+            assert self.motion_video_feats.keys() == self.object_video_feats.keys(), "Motion feats is not match with object feats"
+            for vid in self.image_video_feats.keys():
+                image_video_feats = self.image_video_feats[vid]
+                motion_video_feats = self.motion_video_feats[vid]
+                object_video_feats = self.object_video_feats[vid]
+                for caption in self.captions[vid]:
+                    self.data.append((vid, image_video_feats, motion_video_feats, object_video_feats, caption))
         else:
             raise NotImplementedError(
                 "Unknown feature mode: {}".format(self.feature_mode))

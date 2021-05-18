@@ -21,7 +21,9 @@ class MSVDSplitConfig(object):
 
 class MSRVTTSplitConfig(object):
     # model = "MSR-VTT_ResNet152"
-    model = "MSR-VTT_I3D"
+    # model = "MSR-VTT_I3D"
+    model = "MSR-VTT_BFeat"
+    # model = "MSR-VTT_OFeat"
 
     video_fpath = "../data/MSR-VTT/features/{}.hdf5".format(model)
     train_val_caption_fpath = "../data/MSR-VTT/metadata/train_val_videodatainfo.json"
@@ -64,7 +66,7 @@ class FeatureConfig(object):
     elif model == 'MSVD_InceptionV4+I3D' or model == 'MSR-VTT_InceptionV4+I3D':
         size = [1536, 1024]
         feature_mode = 'two'
-    elif model == 'MSR-VTT_ResNet152+I3D+OFeat':
+    elif model == 'MSR-VTT_ResNet152+I3D+BFeat':
          size = [2048, 1024]
          feature_mode = 'three'
     else:

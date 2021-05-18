@@ -115,10 +115,11 @@ def main():
             best_ckpt_fpath = ckpt_fpath
 
     """ Test with Best Model """
+    torch.cuda.empty_cache()
     print("\n\n\n[BEST: {}]".format(best_epoch))
     best_model = load_checkpoint(model, best_ckpt_fpath)
     best_scores = evaluate(test_iter, best_model, vocab, C.feat.feature_mode)
-    print("scores: {}".format(best_scores))
+    print("Test scores: {}".format(best_scores))
     with open("./result/{}.txt".format(C.model_id), 'w') as f:
         f.write(C.model_id + os.linesep)
         f.write("\n\n\n[BEST: {}]".format(best_epoch) + os.linesep)
