@@ -72,6 +72,9 @@ class CustomDataset(Dataset):
         elif self.feature_mode == 'two':
             self.image_video_feats = defaultdict(lambda: [])
             self.motion_video_feats = defaultdict(lambda: [])
+        elif self.feature_mode == 'three':
+            self.image_video_feats = defaultdict(lambda: [])
+            self.motion_video_feats = defaultdict(lambda: [])
             self.object_video_feats = defaultdict(lambda: [])
 
         self.captions = defaultdict(lambda: [])
@@ -94,9 +97,6 @@ class CustomDataset(Dataset):
             return vid, video_feats, caption
         elif self.feature_mode == 'two':
             vid, image_video_feats, motion_video_feats, caption = self.data[idx]
-        elif self.feature_mode == 'three':
-            vid, image_video_feats, motion_video_feats, caption = self.data[idx]
-
             if self.transform_frame:
                 image_video_feats = [self.transform_frame(
                     feat) for feat in image_video_feats]
@@ -104,8 +104,20 @@ class CustomDataset(Dataset):
                     feat) for feat in motion_video_feats]
             if self.transform_caption:
                 caption = self.transform_caption(caption)
-
             return vid, image_video_feats, motion_video_feats, caption
+        elif self.feature_mode == 'three':
+            vid, image_video_feats, motion_video_feats, object_video_feats, caption = self.data[idx]
+            if self.transform_frame:
+                image_video_feats = [self.transform_frame(
+                    feat) for feat in image_video_feats]
+                motion_video_feats = [self.transform_frame(
+                    feat) for feat in motion_video_feats]
+                object_video_feats = [self.transform_frame(
+                    feat) for feat in object_video_feats]
+            if self.transform_caption:
+                caption = self.transform_caption(caption)
+
+            return vid, image_video_feats, motion_video_feats, object_video_feats, caption
         else:
             raise NotImplementedError(
                 "Unknown feature mode: {}".format(self.feature_mode))
@@ -160,10 +172,14 @@ class CustomDataset(Dataset):
             fin.close()
 
     def load_three_video_feats(self):
-        models = self.C.feat.model.split('_')[1].spilt('+')
+        models = self.C.feat.model.split('_')[1].split('+')
         print('Enter the load3 method---------------------------------')
         for i in range(len(models)):
-            fpath = self.C.loader.phase_video_feat_fpath_tpl.format(self.C.corpus, self.C.corpus + '_', models[i], self.phase)
+            fpath = self.C.loader.phase_video_feat_fpath_tpl.format(self.C.corpus,
+                                                                    self.C.corpus +
+                                                                    '_' +
+                                                                    models[i],
+                                                                    self.phase)
             fin = h5py.File(fpath, 'r')
             for vid in fin.keys():
                 feats = fin[vid].value
@@ -176,10 +192,12 @@ class CustomDataset(Dataset):
                     0, len(feats) - 1, self.C.loader.frame_sample_len, dtype=int)  # return evenly sapced number within the specified
                 feats = feats[sampled_idxs]
                 assert len(feats) == self.C.loader.frame_sample_len
-                if i == 1:
+                if i == 0:
                     self.image_video_feats[vid].append(feats)
-                elif i == 2:
+                elif i == 1:
                     self.motion_video_feats[vid].append(feats)
+                elif i == 2:
+                    self.object_video_feats[vid].append(feats)
 
             fin.close()
 
@@ -303,6 +321,32 @@ class Corpus(object):
             transform_caption=self.transform_caption)
         return dataset
 
+    def three_feature_collate_fn(self, batch):
+        vids, image_video_feats, motion_video_feats, object_video_feats, captions = zip(*batch)
+        image_video_feats_list = zip(*image_video_feats)
+        motion_video_feats_list = zip(*motion_video_feats)
+        object_video_feats_list = zip(*object_video_feats)
+
+        image_video_feats_list = [torch.stack(
+            video_feats) for video_feats in image_video_feats_list]
+        image_video_feats_list = [video_feats.float()
+                                  for video_feats in image_video_feats_list]
+
+        motion_video_feats_list = [torch.stack(
+            video_feats) for video_feats in motion_video_feats_list]
+        motion_video_feats_list = [video_feats.float()
+                                  for video_feats in motion_video_feats_list]
+
+        object_video_feats_list = [torch.stack(
+            video_feats) for video_feats in object_video_feats_list]
+        object_video_feats_list = [video_feats.float()
+                                   for video_feats in object_video_feats_list]
+
+        captions = torch.stack(captions)
+        captions = captions.float()
+
+        return vids, image_video_feats_list, motion_video_feats_list, object_video_feats_list, captions
+
     def two_feature_collate_fn(self, batch):
         vids, image_video_feats, motion_video_feats, captions = zip(*batch)
         image_video_feats_list = zip(*image_video_feats)
@@ -348,6 +392,8 @@ class Corpus(object):
             collate_fn = self.one_feature_collate_fn
         elif self.feature_mode == 'two':
             collate_fn = self.two_feature_collate_fn
+        elif self.feature_mode == 'three':
+            collate_fn = self.three_feature_collate_fn
         else:
             raise NotImplementedError(
                 "Unknown feature mode: {}".format(self.feature_mode))

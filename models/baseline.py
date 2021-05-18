@@ -405,6 +405,8 @@ class Transformer(nn.Module):
             encoding_outputs = self.encode(src, enc_src_mask)
 
             output = self.decode(trg, encoding_outputs, dec_src_mask, trg_mask)
+        elif self.feature_mode == 'three':
+            print('Wait for thinking!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
         pred = self.generator(output)
         # loss = self.label_smoothing(pred.contiguous().view(-1, self.vocab.n_vocabs),
         #                             trg[:, 1:].contiguous().view(-1))
