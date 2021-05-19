@@ -376,6 +376,10 @@ class Transformer(nn.Module):
         elif feature_mode == 'two':
             self.image_src_embed = FeatEmbedding(d_feat[0], d_model, dropout)
             self.motion_src_embed = FeatEmbedding(d_feat[1], d_model, dropout)
+        elif feature_mode == 'three':
+            self.image_src_embed = FeatEmbedding(d_feat[0], d_model, dropout)
+            self.motion_src_embed = FeatEmbedding(d_feat[1], d_model, dropout)
+            self.object_src_embed = FeatEmbedding(d_feat[2], d_model, dropout)
         self.tgt_embed = TextEmbedding(vocab.n_vocabs, d_model)
         # self.tgt_embed = TextEmbedding(vocab, d_model)
         self.pos_embedding = PositionalEncoding(d_model, dropout)
@@ -398,14 +402,13 @@ class Transformer(nn.Module):
         src_mask, trg_mask = mask
         if self.feature_mode == 'one':
             encoding_outputs = self.encode(src, src_mask)
-    
             output = self.decode(trg, encoding_outputs, src_mask, trg_mask)
         elif self.feature_mode == 'two':
             enc_src_mask, dec_src_mask = src_mask
             encoding_outputs = self.encode(src, enc_src_mask)
-
             output = self.decode(trg, encoding_outputs, dec_src_mask, trg_mask)
         elif self.feature_mode == 'three':
+
             print('Wait for thinking!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
         pred = self.generator(output)
         # loss = self.label_smoothing(pred.contiguous().view(-1, self.vocab.n_vocabs),
@@ -425,6 +428,18 @@ class Transformer(nn.Module):
             x2 = self.pos_embedding(x2)
             x2 = self.encoder(x2, src_mask[1])
             return x1 + x2
+        elif self.feature_mode == 'three':
+            x1 = self.image_src_embed(src[0])
+            x1 = self.pos_embedding(x1)
+            x1 = self.encoder(x1, src_mask[0])
+            x2 = self.motion_src_embed(src[1])
+            x2 = self.pos_embedding(x2)
+            x2 = self.encoder(x2, src_mask[1])
+            x3 = self.object_src_embed(src[2])
+            x3 = self.pos_embedding(x3)
+            x3 = self.encoder(x3, src_mask[2])
+            print('----------Encoder shape is ' + x3.shape())
+            return x1 + x2 + x3
 
     def decode(self, trg, memory, src_mask, trg_mask):
         x = self.tgt_embed(trg)
