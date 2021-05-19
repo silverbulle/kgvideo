@@ -43,8 +43,8 @@ class FeatureConfig(object):
     # model = "MSVD_InceptionV4"
     # model = "MSVD_ResNet152"
     # model = "MSR-VTT_ResNet152"
-    model = "MSR-VTT_ResNet152+I3D"
-    # model = "MSR-VTT_ResNet152+I3D+OFeat"
+    # model = "MSR-VTT_ResNet152+I3D"
+    model = "MSR-VTT_ResNet152+I3D+OFeat"
     # model = "MSVD_ResNet152+I3D"
     # model = "MSVD_InceptionV4+I3D"
     # model = "MSVD_I3D"
@@ -67,7 +67,7 @@ class FeatureConfig(object):
         size = [1536, 1024]
         feature_mode = 'two'
     elif model == 'MSR-VTT_ResNet152+I3D+OFeat':
-         size = [2048, 1024]
+         size = [2048, 1024, 1024]
          feature_mode = 'three'
     else:
         raise NotImplementedError("Unknown model: {}".format(model))

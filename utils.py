@@ -146,6 +146,8 @@ def get_predicted_captions(data_iter, model, feature_mode):
                 for vid, image_feat, motion_feat in zip(vids, feats[0], feats[1]):
                     if vid not in onlyonce_dataset:
                         onlyonce_dataset[vid] = (image_feat, motion_feat)
+            elif feature_mode == 'three':
+                print('waiting------------------------, i\'m trying to solve this------')
         onlyonce_iter = []
         vids = list(onlyonce_dataset.keys())
         feats = list(onlyonce_dataset.values())

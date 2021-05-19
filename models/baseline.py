@@ -314,9 +314,12 @@ def pad_mask(src, trg, pad_idx):
     if isinstance(src, tuple):
         src_image_mask = (src[0][:, :, 0] != pad_idx).unsqueeze(1)
         src_motion_mask = (src[1][:, :, 0] != pad_idx).unsqueeze(1)
-        enc_src_mask = (src_image_mask, src_motion_mask)
+        src_object_mask = (src[2][:, :, 0] != pad_idx).unsqueeze(1)
+        enc_src_mask = (src_image_mask, src_motion_mask, src_object_mask)
         dec_src_mask = src_image_mask & src_motion_mask
+        dec_src_mask = dec_src_mask & src_object_mask
         src_mask = (enc_src_mask, dec_src_mask)
+        print('shape of src_maks is ' + str(len(src_mask)))
     else:
         src_mask = (src[:, :, 0] != pad_idx).unsqueeze(1)
     if trg is not None:
@@ -405,10 +408,18 @@ class Transformer(nn.Module):
             output = self.decode(trg, encoding_outputs, src_mask, trg_mask)
         elif self.feature_mode == 'two':
             enc_src_mask, dec_src_mask = src_mask
+            # print('mask is ' + str(mask) + '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&' + str(type(mask)))  # tuple
+            # print('src_mask is ' + str(src_mask) + '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!' + str(type(src_mask)))  # tuple
+            # print('trg_mask is ' + str(trg_mask) + '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@' + str(type(trg_mask)))  # tensor
+            # print('enc_src_mask is ' + str(enc_src_mask) + '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!' + str(type(enc_src_mask)))  # tuple
+            # print('dec_src_mask is ' + str(dec_src_mask) + '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!' + str(type(dec_src_mask)))  # tensor
             encoding_outputs = self.encode(src, enc_src_mask)
+            # print('output is ' + str(encoding_outputs) + str(type(encoding_outputs)))  # tensor
             output = self.decode(trg, encoding_outputs, dec_src_mask, trg_mask)
         elif self.feature_mode == 'three':
-
+            enc_src_mask, dec_src_mask = src_mask
+            encodings_outputs = self.encode(src, enc_src_mask)
+            output = self.decode(trg, encodings_outputs, dec_src_mask, trg_mask)
             print('Wait for thinking!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
         pred = self.generator(output)
         # loss = self.label_smoothing(pred.contiguous().view(-1, self.vocab.n_vocabs),
@@ -438,7 +449,7 @@ class Transformer(nn.Module):
             x3 = self.object_src_embed(src[2])
             x3 = self.pos_embedding(x3)
             x3 = self.encoder(x3, src_mask[2])
-            print('----------Encoder shape is ' + x3.shape())
+            print('----------Encoder x3 len is ' + str(len(x3)))
             return x1 + x2 + x3
 
     def decode(self, trg, memory, src_mask, trg_mask):
