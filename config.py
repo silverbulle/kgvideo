@@ -43,8 +43,8 @@ class FeatureConfig(object):
     # model = "MSVD_InceptionV4"
     # model = "MSVD_ResNet152"
     # model = "MSR-VTT_ResNet152"
-    # model = "MSR-VTT_ResNet152+I3D"
-    model = "MSR-VTT_ResNet152+I3D+OFeat"
+    model = "MSR-VTT_ResNet152+I3D"
+    # model = "MSR-VTT_ResNet152+I3D+OFeat"
     # model = "MSVD_ResNet152+I3D"
     # model = "MSVD_InceptionV4+I3D"
     # model = "MSVD_I3D"
@@ -97,8 +97,8 @@ class MSVDLoaderConfig(object):
     # frame_max_len = 100
     frame_sample_len = 50
 
-    num_workers = 6
-
+    # num_workers = 6
+    num_workers = 0
 
 class MSRVTTLoaderConfig(object):
     n_train = 5175
@@ -118,8 +118,8 @@ class MSRVTTLoaderConfig(object):
     frame_max_len = 80
     frame_sample_len = 50
 
-    num_workers = 6
-
+    # num_workers = 6
+    num_workers = 0
 
 class TransformerConfig(object):
     d_model = 512

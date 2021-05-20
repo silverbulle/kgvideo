@@ -147,7 +147,10 @@ def get_predicted_captions(data_iter, model, feature_mode):
                     if vid not in onlyonce_dataset:
                         onlyonce_dataset[vid] = (image_feat, motion_feat)
             elif feature_mode == 'three':
-                print('waiting------------------------, i\'m trying to solve this------')
+                for vid, image_feat, motion_feat, object_feat in zip(vids, feats[0], feats[1], feats[2]):
+                    if vid not in onlyonce_dataset:
+                        onlyonce_dataset[vid] = (image_feat, motion_feat, object_feat)
+                # print('waiting------------------------, i\'m trying to solve this------')
         onlyonce_iter = []
         vids = list(onlyonce_dataset.keys())
         feats = list(onlyonce_dataset.values())
@@ -164,6 +167,16 @@ def get_predicted_captions(data_iter, model, feature_mode):
                     motion_feats.append(motion_feature)
                 onlyonce_iter.append((vids[:batch_size],
                                       (torch.stack(image_feats), torch.stack(motion_feats))))
+            elif feature_mode == 'three':
+                image_feats = []
+                motion_feats = []
+                object_feats = []
+                for image_feature, motion_feature, object_feat in feats[:batch_size]:
+                    image_feats.append(image_feature)
+                    motion_feats.append(motion_feature)
+                    object_feats.append(object_feat)
+                onlyonce_iter.append((vid[:batch_size],
+                                      (torch.stack(image_feats), torch.stack(motion_feats), torch.stack(object_feats))))
             vids = vids[batch_size:]
             feats = feats[batch_size:]
         return onlyonce_iter

@@ -311,18 +311,26 @@ class Decoder(nn.Module):
 
 
 def pad_mask(src, trg, pad_idx):
-    if isinstance(src, tuple):
-        src_image_mask = (src[0][:, :, 0] != pad_idx).unsqueeze(1)
-        src_motion_mask = (src[1][:, :, 0] != pad_idx).unsqueeze(1)
-        src_object_mask = (src[2][:, :, 0] != pad_idx).unsqueeze(1)
-        enc_src_mask = (src_image_mask, src_motion_mask, src_object_mask)
-        dec_src_mask = src_image_mask & src_motion_mask
-        dec_src_mask = dec_src_mask & src_object_mask
-        src_mask = (enc_src_mask, dec_src_mask)
-        print('shape of src_maks is ' + str(len(src_mask)))
+    if isinstance(src, tuple):  # src means features ,if it's tuple, means use different feat
+        if len(src) == 3:
+            src_image_mask = (src[0][:, :, 0] != pad_idx).unsqueeze(1)
+            src_motion_mask = (src[1][:, :, 0] != pad_idx).unsqueeze(1)
+            src_object_mask = (src[2][:, :, 0] != pad_idx).unsqueeze(1)
+            enc_src_mask = (src_image_mask, src_motion_mask, src_object_mask)
+            dec_src_mask = src_image_mask & src_motion_mask
+            dec_src_mask = dec_src_mask & src_object_mask
+            src_mask = (enc_src_mask, dec_src_mask)
+            print('shape of src_maks is ' + str(len(src_mask)))
+        elif len(src) == 2:
+            src_image_mask = (src[0][:, :, 0] != pad_idx).unsqueeze(1)
+            src_motion_mask = (src[1][:, :, 0] != pad_idx).unsqueeze(1)
+            enc_src_mask = (src_image_mask, src_motion_mask)
+            dec_src_mask = src_image_mask & src_motion_mask
+            src_mask = (enc_src_mask, dec_src_mask)
+            print('shape of src_maks is ' + str(len(src_mask)))
     else:
         src_mask = (src[:, :, 0] != pad_idx).unsqueeze(1)
-    if trg is not None:
+    if trg is not None:  # judge whether it is training mode
         if isinstance(src_mask, tuple):
             trg_mask = (trg != pad_idx).unsqueeze(-2) & subsequent_mask(trg.size(-1)).type_as(src_image_mask.data)
         else:
@@ -504,6 +512,11 @@ class Transformer(nn.Module):
             batch_size = src.shape[0]
             model_encodings = self.encode(src, src_mask)
         elif self.feature_mode == 'two':
+            batch_size = src[0].shape[0]
+            enc_src_mask = src_mask[0]
+            dec_src_mask = src_mask[1]
+            model_encodings = self.encode(src, enc_src_mask)
+        elif self.feature_mode == 'three':
             batch_size = src[0].shape[0]
             enc_src_mask = src_mask[0]
             dec_src_mask = src_mask[1]
