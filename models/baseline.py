@@ -132,7 +132,7 @@ def self_attention(query, key, value, dropout=None, mask=None):
     # mask的操作在QK之后，softmax之前
     if mask is not None:
         # mask.cuda()
-        scores = scores.masked_fill(mask == 0, -1e9)
+        scores = scores.masked_fill(mask == 0, -1e9)  # make mask's index == 1, replace to the value(ex:-1e9)
     self_attn = F.softmax(scores, dim=-1)
     if dropout is not None:
         self_attn = dropout(self_attn)
@@ -320,14 +320,14 @@ def pad_mask(src, trg, pad_idx):
             dec_src_mask = src_image_mask & src_motion_mask
             dec_src_mask = dec_src_mask & src_object_mask
             src_mask = (enc_src_mask, dec_src_mask)
-            print('shape of src_maks is ' + str(len(src_mask)))
+            # print('shape of src_maks is ' + str(len(src_mask)))
         elif len(src) == 2:
             src_image_mask = (src[0][:, :, 0] != pad_idx).unsqueeze(1)
             src_motion_mask = (src[1][:, :, 0] != pad_idx).unsqueeze(1)
             enc_src_mask = (src_image_mask, src_motion_mask)
-            dec_src_mask = src_image_mask & src_motion_mask
-            src_mask = (enc_src_mask, dec_src_mask)
-            print('shape of src_maks is ' + str(len(src_mask)))
+            dec_src_mask = src_image_mask & src_motion_mask  # [32, 1, 50]
+            src_mask = (enc_src_mask, dec_src_mask)  # tuple [32, 1, 50]*2
+            # print('shape of src_maks is ' + str(len(src_mask)))
     else:
         src_mask = (src[:, :, 0] != pad_idx).unsqueeze(1)
     if trg is not None:  # judge whether it is training mode
@@ -344,7 +344,7 @@ def pad_mask(src, trg, pad_idx):
 def subsequent_mask(size):
     """Mask out subsequent positions."""
     attn_shape = (1, size, size)
-    subsequent_mask = np.triu(np.ones(attn_shape), k=1).astype('uint8')
+    subsequent_mask = np.triu(np.ones(attn_shape), k=1).astype('uint8')  # np.triu() upper triangle of an array
     return (torch.from_numpy(subsequent_mask) == 0).cuda()
 
 
