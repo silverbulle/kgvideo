@@ -175,6 +175,9 @@ class CustomDataset(Dataset):
         models = self.C.feat.model.split('_')[1].split('+')
         print('Enter the load3 method---------------------------------')
         for i in range(len(models)):
+            frames = self.C.loader.frame_sample_len
+            if i == 2:
+                frames = self.C.feat.num_boxes
             fpath = self.C.loader.phase_video_feat_fpath_tpl.format(self.C.corpus,
                                                                     self.C.corpus +
                                                                     '_' +
@@ -183,15 +186,15 @@ class CustomDataset(Dataset):
             fin = h5py.File(fpath, 'r')
             for vid in fin.keys():
                 feats = fin[vid].value
-            if len(feats) < self.C.loader.frame_sample_len:
-                num_paddings = self.C.loader.frame_sample_len - len(feats)
+            if len(feats) < frames:
+                num_paddings = frames - len(feats)
                 feats = feats.tolist() + [np.zeros_like(feats[0])
                                           for _ in range(num_paddings)]
                 feats = np.asarray(feats)
                 sampled_idxs = np.linspace(
-                    0, len(feats) - 1, self.C.loader.frame_sample_len, dtype=int)  # return evenly sapced number within the specified
+                    0, len(feats) - 1, frames, dtype=int)  # return evenly sapced number within the specified
                 feats = feats[sampled_idxs]
-                assert len(feats) == self.C.loader.frame_sample_len
+                assert len(feats) == frames
                 if i == 0:
                     self.image_video_feats[vid].append(feats)
                 elif i == 1:
@@ -224,8 +227,9 @@ class CustomDataset(Dataset):
                         (vid, image_video_feats, motion_video_feats, caption))
         elif self.feature_mode == 'three':
             self.load_three_video_feats()
-            assert self.image_video_feats.keys() == self.object_video_feats.keys(), "Image feats is not match with object feats"
-            assert self.motion_video_feats.keys() == self.object_video_feats.keys(), "Motion feats is not match with object feats"
+            # assert self.image_video_feats.keys() == self.object_video_feats.keys(), "Image feats is not match with object feats"
+            # assert self.motion_video_feats.keys() == self.object_video_feats.keys(), "Motion feats is not match with object feats"
+            assert self.image_video_feats.keys() == self.motion_video_feats.keys(), "Image feats is not match with motion feats"
             for vid in self.image_video_feats.keys():
                 image_video_feats = self.image_video_feats[vid]
                 motion_video_feats = self.motion_video_feats[vid]

@@ -73,33 +73,32 @@ def train(e, model, optimizer, train_iter, vocab, gradient_clip, feature_mode):
     # 定义label smoothing
     criterion = LabelSmoothing(vocab.n_vocabs, pad_idx, C.label_smoothing)
     t = tqdm(train_iter)
-    if t:
-        for batch in t:
-            _, feats, captions = parse_batch(batch, feature_mode)
-            trg = captions[:, :-1]
-            trg_y = captions[:, 1:]
-            norm = (trg_y != pad_idx).data.sum()
-            mask = pad_mask(feats, trg, pad_idx)
-            optimizer.zero_grad()
-            output = model(feats, trg, mask)
-            # loss = F.nll_loss(output.view(-1, vocab.n_vocabs),
-            #                               trg_y.contiguous().view(-1),
-            #                               ignore_index=pad_idx)
-            loss = criterion(output.view(-1, vocab.n_vocabs),
-                             trg_y.contiguous().view(-1)) / norm
-            # entropy_loss = losses.entropy_loss(output, ignore_mask=(trg_y == pad_idx))
-            # loss = cross_entropy_loss # + reg_lambda * entropy_loss
-            loss.backward()
-            if gradient_clip is not None:
-                torch.nn.utils.clip_grad_norm_(model.parameters(), gradient_clip)
-            optimizer.step()
 
-            loss_checker.update(loss.item())  #, cross_entropy_loss.item())#, entropy_loss.item())
-            # t.set_description("[Epoch #{0}] loss: {2:.3f} = (CE: {3:.3f}) + (Ent: {1} * {4:.3f})".format(
-            #     e, reg_lambda, *loss_checker.mean(last=10)))
-            t.set_description("[Epoch #{0}] loss: {1:.3f}".format(e, *loss_checker.mean(last=10)))
-    else:
-        print('t is not available!!!!!!!!!!!!!')
+    for batch in t:
+        _, feats, captions = parse_batch(batch, feature_mode)
+        trg = captions[:, :-1]
+        trg_y = captions[:, 1:]
+        norm = (trg_y != pad_idx).data.sum()
+        mask = pad_mask(feats, trg, pad_idx)
+        optimizer.zero_grad()
+        output = model(feats, trg, mask)
+        # loss = F.nll_loss(output.view(-1, vocab.n_vocabs),
+        #                               trg_y.contiguous().view(-1),
+        #                               ignore_index=pad_idx)
+        loss = criterion(output.view(-1, vocab.n_vocabs),
+                         trg_y.contiguous().view(-1)) / norm
+        # entropy_loss = losses.entropy_loss(output, ignore_mask=(trg_y == pad_idx))
+        # loss = cross_entropy_loss # + reg_lambda * entropy_loss
+        loss.backward()
+        if gradient_clip is not None:
+            torch.nn.utils.clip_grad_norm_(model.parameters(), gradient_clip)
+        optimizer.step()
+
+        loss_checker.update(loss.item())  #, cross_entropy_loss.item())#, entropy_loss.item())
+        # t.set_description("[Epoch #{0}] loss: {2:.3f} = (CE: {3:.3f}) + (Ent: {1} * {4:.3f})".format(
+        #     e, reg_lambda, *loss_checker.mean(last=10)))
+        t.set_description("[Epoch #{0}] loss: {1:.3f}".format(e, *loss_checker.mean(last=10)))
+
     total_loss = loss_checker.mean()[0]
     loss = {
         'total': total_loss,
@@ -190,7 +189,7 @@ def get_predicted_captions(data_iter, model, feature_mode):
     for vids, feats in onlyonce_iter:
         # captions = model.greed_decode(feats, C.loader.max_caption_len)
         captions = model.beam_search_decode(feats, C.beam_size, C.loader.max_caption_len)
-        captions = [" ".join(caption[0].value) for caption in captions  ]
+        captions = [" ".join(caption[0].value) for caption in captions]
         # captions = [for for caption in captions]
         # captions = [ idxs_to_sentence(caption, vocab.idx2word, EOS_idx) for caption in captions ]
         vid2pred.update({ v: p for v, p in zip(vids, captions) })
