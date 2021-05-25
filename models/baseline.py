@@ -318,7 +318,7 @@ def pad_mask(src, trg, pad_idx):
             src_object_mask = (src[2][:, :, 0] != pad_idx).unsqueeze(1)
             enc_src_mask = (src_image_mask, src_motion_mask, src_object_mask)
             dec_src_mask = src_image_mask & src_motion_mask
-            dec_src_mask = dec_src_mask & src_object_mask
+            # dec_src_mask = dec_src_mask & src_object_mask
             src_mask = (enc_src_mask, dec_src_mask)
             # print('shape of src_maks is ' + str(len(src_mask)))
         if len(src) == 2:
@@ -561,7 +561,7 @@ class Transformer(nn.Module):
                 model_encodings_l += [model_encodings[i:i + 1]] * cur_beam_size
                 if self.feature_mode == 'one':
                     src_mask_l += [src_mask[i:i + 1]] * cur_beam_size
-                elif self.feature_mode == 'two':
+                elif self.feature_mode == 'two' or 'three':
                     src_mask_l += [dec_src_mask[i:i + 1]] * cur_beam_size
             "shape (sum(4 bt * cur_beam_sz_i), 1 dec_sent_len, 128 d_model)"
             model_encodings_cur = torch.cat(model_encodings_l, dim=0)
@@ -571,7 +571,7 @@ class Transformer(nn.Module):
             if self.feature_mode == 'one':
                 out = self.decode(Variable(y_tm1).to(self.device), model_encodings_cur, src_mask_cur,
                                   Variable(subsequent_mask(y_tm1.size(-1)).type_as(src.data)).to(self.device))
-            elif self.feature_mode == 'two':
+            elif self.feature_mode == 'two' or 'three':
                 out = self.decode(Variable(y_tm1).to(self.device), model_encodings_cur, src_mask_cur,
                                   Variable(subsequent_mask(y_tm1.size(-1)).type_as(src[0].data)).to(self.device))
             "shape (sum(4 bt * cur_beam_sz_i), 1 dec_sent_len, 50002 vocab_sz)"

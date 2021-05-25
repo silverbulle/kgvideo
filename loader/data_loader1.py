@@ -186,21 +186,21 @@ class CustomDataset(Dataset):
             fin = h5py.File(fpath, 'r')
             for vid in fin.keys():
                 feats = fin[vid].value
-            if len(feats) < frames:
-                num_paddings = frames - len(feats)
-                feats = feats.tolist() + [np.zeros_like(feats[0])
-                                          for _ in range(num_paddings)]
-                feats = np.asarray(feats)
-                sampled_idxs = np.linspace(
-                    0, len(feats) - 1, frames, dtype=int)  # return evenly sapced number within the specified
-                feats = feats[sampled_idxs]
-                assert len(feats) == frames
-                if i == 0:
-                    self.image_video_feats[vid].append(feats)
-                elif i == 1:
-                    self.motion_video_feats[vid].append(feats)
-                elif i == 2:
-                    self.object_video_feats[vid].append(feats)
+                if len(feats) < frames:
+                    num_paddings = frames - len(feats)
+                    feats = feats.tolist() + [np.zeros_like(feats[0])
+                                              for _ in range(num_paddings)]
+                    feats = np.asarray(feats)
+                    sampled_idxs = np.linspace(
+                        0, len(feats) - 1, frames, dtype=int)  # return evenly sapced number within the specified
+                    feats = feats[sampled_idxs]
+                    assert len(feats) == frames
+                    if i == 0:
+                        self.image_video_feats[vid].append(feats)
+                    elif i == 1:
+                        self.motion_video_feats[vid].append(feats)
+                    elif i == 2:
+                        self.object_video_feats[vid].append(feats)
 
             fin.close()
 
