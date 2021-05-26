@@ -159,6 +159,7 @@ class TrainConfig(object):
     }[corpus]
     batch_size = 32
     # batch_size = 64
+    # batch_size = 1
     shuffle = True
     optimizer = "AMSGrad"
     gradient_clip = 5.0  # None if not used
@@ -182,7 +183,7 @@ class TrainConfig(object):
     pretrained_decoder_fpath = None
 
     """ Evaluate """
-    metrics = [ 'Bleu_4', 'CIDEr', 'METEOR', 'ROUGE_L' ]
+    metrics = ['Bleu_4', 'CIDEr', 'METEOR', 'ROUGE_L']
 
     """ ID """
     exp_id = "Transformer_baseline"

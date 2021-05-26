@@ -174,7 +174,7 @@ def get_predicted_captions(data_iter, model, feature_mode):
                     image_feats.append(image_feature)
                     motion_feats.append(motion_feature)
                     object_feats.append(object_feat)
-                onlyonce_iter.append((vid[:batch_size],
+                onlyonce_iter.append((vids[:batch_size],
                                       (torch.stack(image_feats), torch.stack(motion_feats), torch.stack(object_feats))))
             vids = vids[batch_size:]
             feats = feats[batch_size:]
