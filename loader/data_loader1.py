@@ -176,6 +176,7 @@ class CustomDataset(Dataset):
         print('Enter the load3 method---------------------------------')
         for i in range(len(models)):
             frames = self.C.loader.frame_sample_len
+            # i = 2
             if i == 2:
                 frames = self.C.feat.num_boxes
             fpath = self.C.loader.phase_video_feat_fpath_tpl.format(self.C.corpus,
@@ -185,11 +186,18 @@ class CustomDataset(Dataset):
                                                                     self.phase)
             fin = h5py.File(fpath, 'r')
             for vid in fin.keys():
+                # vid = 'video122'
                 feats = fin[vid].value
                 if len(feats) < frames:
                     num_paddings = frames - len(feats)
-                    feats = feats.tolist() + [np.zeros_like(feats[0])
-                                              for _ in range(num_paddings)]
+                    if feats.size == 0:
+                        # for _ in range(num_paddings):
+                        feats = np.zeros((frames, 1024))  # now just object feat may appear the feature is empty
+                    else:
+                        feats = feats.tolist() + [np.zeros_like(feats[0])
+                                                      for _ in range(num_paddings)]
+                    # feats = feats.tolist() + [np.zeros_like(feats[0])
+                    #                           for _ in range(num_paddings)]
                     feats = np.asarray(feats)
                     sampled_idxs = np.linspace(
                         0, len(feats) - 1, frames, dtype=int)  # return evenly sapced number within the specified
@@ -201,7 +209,6 @@ class CustomDataset(Dataset):
                         self.motion_video_feats[vid].append(feats)
                     elif i == 2:
                         self.object_video_feats[vid].append(feats)
-
             fin.close()
 
 
