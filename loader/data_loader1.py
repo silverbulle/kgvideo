@@ -240,7 +240,10 @@ class CustomDataset(Dataset):
             for vid in self.image_video_feats.keys():
                 image_video_feats = self.image_video_feats[vid]
                 motion_video_feats = self.motion_video_feats[vid]
-                object_video_feats = self.object_video_feats[vid]
+                if self.object_video_feats[vid]:
+                    object_video_feats = self.object_video_feats[vid]
+                else:
+                    object_video_feats = list(np.zeros((1, self.C.feat.num_boxes, 1024)))
                 for caption in self.captions[vid]:
                     self.data.append((vid, image_video_feats, motion_video_feats, object_video_feats, caption))
         else:
