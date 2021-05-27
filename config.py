@@ -155,7 +155,7 @@ class TrainConfig(object):
     """ Optimization """
     epochs = {
         'MSVD': 30,
-        'MSR-VTT': 30,
+        'MSR-VTT': 1,
     }[corpus]
     batch_size = 32
     # batch_size = 64

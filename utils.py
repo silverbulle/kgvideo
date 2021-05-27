@@ -54,10 +54,10 @@ def parse_batch(batch, feature_mode):
     elif feature_mode == 'three':
         vids, image_feats, motion_feats, object_feats, captions = batch
         image_feats = [feat.cuda() for feat in image_feats]
-        motion_feats = [feat.cuda() for feat in motion_feats]
-        object_feats = [feat.cuda() for feat in object_feats]
         image_feats = torch.cat(image_feats, dim=2)
+        motion_feats = [feat.cuda() for feat in motion_feats]
         motion_feats = torch.cat(motion_feats, dim=2)
+        object_feats = [feat.cuda() for feat in object_feats]
         object_feats = torch.cat(object_feats, dim=2)
         captions = captions.long().cuda()
         feats = (image_feats, motion_feats, object_feats)
@@ -98,7 +98,7 @@ def train(e, model, optimizer, train_iter, vocab, gradient_clip, feature_mode):
         # t.set_description("[Epoch #{0}] loss: {2:.3f} = (CE: {3:.3f}) + (Ent: {1} * {4:.3f})".format(
         #     e, reg_lambda, *loss_checker.mean(last=10)))
         t.set_description("[Epoch #{0}] loss: {1:.3f}".format(e, *loss_checker.mean(last=10)))
-
+        del feats, _, captions
     total_loss = loss_checker.mean()[0]
     loss = {
         'total': total_loss,
@@ -124,7 +124,7 @@ def test(model, val_iter, vocab, feature_mode):
             loss = criterion(output.view(-1, vocab.n_vocabs),
                              trg_y.contiguous().view(-1)) / norm
             loss_checker.update(loss.item())
-
+        del _, feats, captions
     total_loss = loss_checker.mean()[0]
     loss = {
         'total': total_loss,
@@ -149,6 +149,8 @@ def get_predicted_captions(data_iter, model, feature_mode):
                 for vid, image_feat, motion_feat, object_feat in zip(vids, feats[0], feats[1], feats[2]):
                     if vid not in onlyonce_dataset:
                         onlyonce_dataset[vid] = (image_feat, motion_feat, object_feat)
+            del vids, feats, _
+
                 # print('waiting------------------------, i\'m trying to solve this------')
         onlyonce_iter = []
         vids = list(onlyonce_dataset.keys())
