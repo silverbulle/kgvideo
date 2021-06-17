@@ -5,27 +5,58 @@ import json
 
 nlp = StanfordCoreNLP(r'/home/silverbullet/Tool/stanford-corenlp-4.2.2')
 sentence_path = '../MSR-VTT/metadata/sentence.txt'
-entity_path = '../MSR-VTT/metadata/entity_total.txt'
+entity_rel_path = '../MSR-VTT/metadata/entity_total.txt'
 # doc = nlp("The 22-year-old recently won ATP Challenger tournament.")
 
 
-# f = open(sentence_path, 'r')
-# w = open(entity_path, 'w')
+f = open(sentence_path, 'r')
+w = open(entity_rel_path, 'w')
+lines = f.readlines()
+cnt = 0
+for line in lines:
+    sentence = line
+    output = nlp.annotate(sentence, properties={"annotators": "tokenize,lemma,ssplit,pos,depparse,natlog,openie",
+                                                "outputFormat": "json",
+                                                'openie.triple.strict': 'true',
+                                                'openie.max_entailments_per_clause': '1'
+                                                })
+    data = json.loads(output)
+    # result = data['sentences'][0]['openie']
+    # print(result)
+    # print(data['sentences'][0].keys())
+    # print(data['sentences'][0]['openie'])
+    # print(data['sentences'][0]['tokens'])
 
-sentence = 'I want to go to beijing.'
-output = nlp.annotate(sentence, properties={"annotators": "tokenize,,lemma,ssplit,pos,depparse,natlog,openie",
-                                            "outputFormat": "json",
-                                            'openie.triple.strict': 'true'
-                                            })
-data = json.loads(output)
-# result = data['sentences'][0]['openie']
-# print(result)
-for i in range(len(data['sentences'])):
-    result = [data["sentences"][i]["openie"] for item in output]
-    for g in result:
-        for rel in g:
-            relationSent = rel['subject'], rel['relation'], rel['object']
-            print(relationSent)
+    for i in range(len(data['sentences'])):
+        result = [data["sentences"][i]["openie"] for item in data]
+        lemmas = [data["sentences"][i]["tokens"] for item in data]
+        # result = [data["sentences"][i]["openie"] for item in data]
+        for g in result:
+            for rel in g:
+                l_relation, l_object, l_subject = '', '', ''
+                span = str(rel['subjectSpan']), str(rel['objectSpan']), str(rel['relationSpan'])
+                l_subject1 = lemmas[i][rel['subjectSpan'][0]:rel['subjectSpan'][1]][0:rel['subjectSpan'][1] - rel['subjectSpan'][0]]
+                for h in range(rel['subjectSpan'][1] - rel['subjectSpan'][0]):
+                    l_subject = l_subject1[h]['lemma'] + ' ' + l_subject
+                l_object1 = lemmas[i][rel['objectSpan'][0]:rel['objectSpan'][1]][0:rel['objectSpan'][1] - rel['objectSpan'][0]]
+                for s in range(rel['objectSpan'][1] - rel['objectSpan'][0]):
+                    l_object = l_object1[s]['lemma'] + ' ' + l_object
+                l_relation1 = lemmas[i][rel['relationSpan'][0]:rel['relationSpan'][1]][0:rel['relationSpan'][1] - rel['relationSpan'][0]]
+                for j in range(rel['relationSpan'][1] - rel['relationSpan'][0]):
+                    l_relation = l_relation1[j]['lemma'] + ' ' + l_relation
+                # l_relation = lemmas[i][rel['relationSpan'][0]:rel['relationSpan'][1]][0][
+                #              0:rel['relationSpan'][1] - rel['relationSpan'][0]]['lemma']
+                # relationSent1 = rel['subject'], rel['object'], rel['relation']
+                relationSent = l_subject, '#', l_object, '#', l_relation
+                print(relationSent)
+                w.writelines(relationSent)
+                w.writelines('\n')
+                cnt += 1
+                print(str(cnt))
+                # print(relationSent1)
+print('total number is ' + str(cnt))
+w.close()
+f.close()
 
 # sentence = 'Guangdong University of Foreign Studies is located in Guangzhou.'
 # print('Tokenize:', nlp.word_tokenize(sentence))
