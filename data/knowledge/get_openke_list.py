@@ -14,6 +14,7 @@ lines = f.readlines()
 entity_list = []
 relation_list = []
 cnt = 0
+rel = 0
 for line in lines:
     list1 = line.split('#')
     for i in range(len(line.split('#'))):
@@ -21,14 +22,18 @@ for line in lines:
         if i == 0 or i == 1:
             if list1[i].strip() not in entity_list:
                 entity_list.append(list1[i].strip())
-        # elif i == 2:
-        #     if list1[i] not in relation_list:
-        #         relation_list.append(list1[i].replace('\n', '').strip())
+        elif i == 2:
+            if list1[i].replace('\n', '').strip() not in relation_list:
+                relation_list.append(list1[i].replace('\n', '').strip())
 f.close()
 for lens in range(len(entity_list)):
     w1.writelines(entity_list[lens])
     w1.writelines(' ' + str(lens) + '\n')
     cnt += 1
+for lens in range(len(relation_list)):
+    w2.writelines(entity_list[lens])
+    w2.writelines(' ' + str(lens) + '\n')
+    rel += 1
 w1.close()
 w2.close()
-print(cnt)
+print(cnt + '  ' + rel)
