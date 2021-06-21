@@ -1,6 +1,3 @@
-__author__ = 'Oscar_Yang'
-# -*- coding= utf-8 -*-
-# copyRight by OSCAR
 """
 本脚本实现，合并几个英文文本，并且统计词频。
 脚本定义了几个函数：
@@ -99,11 +96,14 @@ def top_counts(word_list, n=100):
 # 测试部分
 if __name__ == '__main__':
     file_list = ['../MSR-VTT/metadata/entity_total.txt']
-
+    word_frequency_file = '../MSR-VTT/OPENKE_file/word_frequency.txt'
+    w = open(word_frequency_file, 'w')
     cc = map(readFile, file_list)
     word_list = functools.reduce(merge2, cc)
-    top_counts = top_counts(word_list, 100)
+    top_counts = top_counts(word_list, 200)
     # print(top_counts)
     print("最常用的单词排行榜:")
-    for word in top_counts[0:100]:
+    for word in top_counts[0:200]:
+        w.writelines("{0:100}{1}".format(word[1], word[0]))
+        w.writelines('\n')
         print("{0:100}{1}".format(word[1], word[0]))

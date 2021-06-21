@@ -16,8 +16,8 @@ relation_list = []
 cnt = 0
 rel = 0
 for line in lines:
-    list1 = line.split('#')
-    for i in range(len(line.split('#'))):
+    list1 = line.split('&')
+    for i in range(len(list1)):
         list1 = list1
         if i == 0 or i == 1:
             if list1[i].strip() not in entity_list:
@@ -27,13 +27,13 @@ for line in lines:
                 relation_list.append(list1[i].replace('\n', '').strip())
 f.close()
 for lens in range(len(entity_list)):
-    w1.writelines(entity_list[lens])
-    w1.writelines(' ' + str(lens) + '\n')
+    w1.writelines("{0:100}{1}".format(entity_list[lens], str(lens)))
+    w1.writelines('\n')
     cnt += 1
 for lens in range(len(relation_list)):
-    w2.writelines(entity_list[lens])
-    w2.writelines(' ' + str(lens) + '\n')
+    w2.writelines("{0:100}{1}".format(relation_list[lens], str(lens)))
+    w2.writelines('\n')
     rel += 1
 w1.close()
 w2.close()
-print(cnt + '  ' + rel)
+print(str(cnt) + '  ' + str(rel))

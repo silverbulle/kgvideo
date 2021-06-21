@@ -47,7 +47,7 @@ for line in lines:
                 # l_relation = lemmas[i][rel['relationSpan'][0]:rel['relationSpan'][1]][0][
                 #              0:rel['relationSpan'][1] - rel['relationSpan'][0]]['lemma']
                 # relationSent1 = rel['subject'], rel['object'], rel['relation']
-                relationSent = l_subject, '#', l_object, '#', l_relation
+                relationSent = l_subject, '&', l_object, '&', l_relation
                 print(relationSent)
                 w.writelines(relationSent)
                 w.writelines('\n')
