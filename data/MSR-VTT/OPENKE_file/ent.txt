@@ -1,0 +1,81 @@
+__background
+person|man person guy woman lady she child baby girl people batman superman lincoln pedestrian coach kid band musician president obama gentleman doctor speaker medalist hero boy rhett somebody runner messi pinata
+bicycle
+car|car vehicle automobile
+motorcycle
+airplane
+bus
+train
+truck
+boat
+traffic light
+fire hydrant
+stop sign
+parking meter
+bench
+bird
+cat|animal cat 
+dog|animal dog puppy
+horse|animal
+sheep|animal
+cow|animal
+elephant|animal elephant
+bear
+zebra
+giraffe
+backpack
+umbrella
+handbag
+tie|scarf
+suitcase
+frisbee
+skis
+snowboard
+sports ball|ball soccer baseball 
+kite
+baseball bat
+baseball glove
+skateboard
+surfboard
+tennis racket|tennis racket
+bottle
+wine glass
+cup
+fork
+knife
+spoon|chopstick
+bowl|pot dish
+banana
+apple
+sandwich
+orange
+broccoli
+carrot
+hot dog
+pizza
+donut
+cake
+chair|chair 
+couch
+potted plant
+bed
+dining table
+toilet
+tv|tv mtv
+laptop|laptop pc computer coputer
+mouse
+remote
+keyboard
+cell phone|phone speakerphone smartphone
+microwave
+oven
+toaster
+sink
+refrigerator
+book
+clock
+vase
+scissors
+teddy bear|toy
+hair drier
+toothbrush
