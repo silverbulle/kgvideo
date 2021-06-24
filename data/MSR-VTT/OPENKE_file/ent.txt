@@ -1,7 +1,7 @@
 __background
 person|man person guy woman lady she child baby girl people batman superman lincoln pedestrian coach kid band musician president obama gentleman doctor speaker medalist hero boy rhett somebody runner messi pinata blonde singer police murder player he coach bonnie couple
-bicycle female scientist cameraman youtuber chef dj vet boyfriend student actress actor mom military freddy caprio leonardo reporter elvis
-car|car vehicle automobile
+bicycle female scientist cameraman youtuber chef dj vet boyfriend student actress actor mom military freddy caprio leonardo reporter elvis human pitcher nurse stranger celebrity father infant announcer politician wrestler magician assistant krueger adult grandma referee 
+car|car vehicle automobile truck van tractor bulldozer sedan audi
 motorcycle
 airplane|airplane helicopter plane
 bus
@@ -14,7 +14,7 @@ stop sign
 parking meter
 bench
 bird
-cat|animal cat 
+cat|animal cat kitten 
 dog|animal dog puppy hound
 horse|animal horse
 sheep|animal
@@ -31,7 +31,7 @@ suitcase
 frisbee
 skis
 snowboard
-sports ball|ball soccer baseball football basketball
+sports ball|ball soccer baseball football basketball rugby
 kite
 baseball bat
 baseball glove
@@ -44,11 +44,11 @@ cup
 fork
 knife
 spoon|chopstick spoon
-bowl|pot dish pan
+bowl|pot dish pan plate
 banana
 apple
 sandwich
-orange|orange
+orange|orange lemon fruit
 broccoli
 carrot
 hot dog
