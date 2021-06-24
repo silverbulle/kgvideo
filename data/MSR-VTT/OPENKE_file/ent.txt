@@ -1,13 +1,13 @@
 __background
-person|man person guy woman lady she child baby girl people batman superman lincoln pedestrian coach kid band musician president obama gentleman doctor speaker medalist hero boy rhett somebody runner messi pinata
-bicycle
+person|man person guy woman lady she child baby girl people batman superman lincoln pedestrian coach kid band musician president obama gentleman doctor speaker medalist hero boy rhett somebody runner messi pinata blonde singer police murder player he coach bonnie couple
+bicycle female scientist cameraman youtuber chef dj vet boyfriend student actress actor mom military freddy caprio leonardo reporter elvis
 car|car vehicle automobile
 motorcycle
-airplane
+airplane|airplane helicopter plane
 bus
 train
 truck
-boat
+boat|boat
 traffic light
 fire hydrant
 stop sign
@@ -15,10 +15,10 @@ parking meter
 bench
 bird
 cat|animal cat 
-dog|animal dog puppy
-horse|animal
+dog|animal dog puppy hound
+horse|animal horse
 sheep|animal
-cow|animal
+cow|animal buffalo cow
 elephant|animal elephant
 bear
 zebra
@@ -26,12 +26,12 @@ giraffe
 backpack
 umbrella
 handbag
-tie|scarf
+tie|scarf tie
 suitcase
 frisbee
 skis
 snowboard
-sports ball|ball soccer baseball 
+sports ball|ball soccer baseball football basketball
 kite
 baseball bat
 baseball glove
@@ -43,12 +43,12 @@ wine glass
 cup
 fork
 knife
-spoon|chopstick
-bowl|pot dish
+spoon|chopstick spoon
+bowl|pot dish pan
 banana
 apple
 sandwich
-orange
+orange|orange
 broccoli
 carrot
 hot dog
@@ -61,12 +61,12 @@ potted plant
 bed
 dining table
 toilet
-tv|tv mtv
+tv|tv mtv television
 laptop|laptop pc computer coputer
 mouse
 remote
 keyboard
-cell phone|phone speakerphone smartphone
+cell phone|phone speakerphone smartphone iphone
 microwave
 oven
 toaster
@@ -78,4 +78,4 @@ vase
 scissors
 teddy bear|toy
 hair drier
-toothbrush
+toothbrush|brush
