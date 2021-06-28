@@ -1,7 +1,7 @@
 __background
 person|man person guy woman lady she child baby girl people batman superman lincoln pedestrian coach kid band musician president obama gentleman doctor speaker medalist hero boy rhett somebody runner messi pinata blonde singer police murder player he coach bonnie couple
-bicycle female scientist cameraman youtuber chef dj vet boyfriend student actress actor mom military freddy caprio leonardo reporter elvis human pitcher nurse stranger celebrity father infant announcer politician wrestler magician assistant krueger adult grandma referee guest swimmer narrator american performer teenager beachgoer naturalist shania britney researcher junkie friend worker toddler
-car|car vehicle automobile truck van tractor bulldozer sedan audi racecar  
+bicycle female scientist cameraman youtuber chef dj vet boyfriend student actress actor mom military freddy caprio leonardo reporter elvis human pitcher nurse stranger celebrity father infant announcer politician wrestler magician assistant krueger adult grandma referee guest swimmer narrator american performer teenager beachgoer naturalist shania britney researcher junkie friend worker toddler alady addict adventurer bryant surgeon santa mcilroy michael hottie letterman cher bruce
+car|car vehicle automobile truck van tractor bulldozer sedan audi racecar eldorado sedan mustang   
 motorcycle|motorcycle bike mini-bike motorbike
 airplane|airplane helicopter plane airport 
 bus
@@ -13,7 +13,7 @@ fire hydrant
 stop sign
 parking meter
 bench
-bird|bird
+bird|bird parrot parakeet
 cat|animal cat kitten kitt 
 dog|animal dog puppy hound
 horse|animal horse
@@ -42,7 +42,7 @@ bottle
 wine glass
 cup
 fork
-knife
+knife|kniof knife
 spoon|chopstick spoon
 bowl|pot dish pan plate bowl
 banana|fruit
@@ -65,7 +65,7 @@ tv|tv mtv television
 laptop|laptop pc computer coputer
 mouse
 remote
-keyboard
+keyboard|keyboard
 cell phone|phone speakerphone smartphone iphone cellphone
 microwave
 oven
