@@ -1,9 +1,9 @@
 __background
 person|man person guy woman lady she child baby girl people batman superman lincoln pedestrian coach kid band musician president obama gentleman doctor speaker medalist hero boy rhett somebody runner messi pinata blonde singer police murder player he coach bonnie couple
-bicycle female scientist cameraman youtuber chef dj vet boyfriend student actress actor mom military freddy caprio leonardo reporter elvis human pitcher nurse stranger celebrity father infant announcer politician wrestler magician assistant krueger adult grandma referee guest swimmer narrator american performer teenager beachgoer naturalist shania britney researcher junkie friend
-car|car vehicle automobile truck van tractor bulldozer sedan audi racecar 
+bicycle female scientist cameraman youtuber chef dj vet boyfriend student actress actor mom military freddy caprio leonardo reporter elvis human pitcher nurse stranger celebrity father infant announcer politician wrestler magician assistant krueger adult grandma referee guest swimmer narrator american performer teenager beachgoer naturalist shania britney researcher junkie friend worker toddler
+car|car vehicle automobile truck van tractor bulldozer sedan audi racecar  
 motorcycle|motorcycle bike mini-bike motorbike
-airplane|airplane helicopter plane
+airplane|airplane helicopter plane airport 
 bus
 train
 truck
