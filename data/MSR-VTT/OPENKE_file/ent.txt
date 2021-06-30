@@ -1,9 +1,9 @@
 __background
 person|man person guy woman lady she child baby girl people batman superman lincoln pedestrian coach kid band musician president obama gentleman doctor speaker medalist hero boy rhett somebody runner messi pinata blonde singer police murder player he coach bonnie couple
-bicycle female scientist cameraman youtuber chef dj vet boyfriend student actress actor mom military freddy caprio leonardo reporter elvis human pitcher nurse stranger celebrity father infant announcer politician wrestler magician assistant krueger adult grandma referee guest swimmer narrator american performer teenager beachgoer naturalist shania britney researcher junkie friend worker toddler alady addict adventurer bryant surgeon santa mcilroy michael hottie letterman cher bruce cillian williams racer driver character paleontologist worker reader stephen
-car|car vehicle automobile truck van tractor bulldozer sedan audi racecar eldorado sedan mustang   
+bicycle female scientist cameraman youtuber chef dj vet boyfriend student actress actor mom military freddy caprio leonardo reporter elvis human pitcher nurse stranger celebrity father infant announcer politician wrestler magician assistant krueger adult grandma referee guest swimmer narrator american performer teenager beachgoer naturalist shania britney researcher junkie friend worker toddler alady addict adventurer bryant surgeon santa mcilroy michael hottie letterman cher bruce cillian williams racer driver character paleontologist worker reader stephen clinton barrett acrobat chld professor tyson loki rider catwoman smith bride
+car|car vehicle automobile truck van tractor bulldozer sedan audi racecar eldorado sedan mustang lamborghinus   
 motorcycle|motorcycle bike mini-bike motorbike
-airplane|airplane helicopter plane airport 
+airplane|airplane helicopter plane airport zeppelin blimp
 bus
 train
 truck
@@ -31,7 +31,7 @@ suitcase
 frisbee
 skis
 snowboard
-sports ball|ball soccer baseball football basketball rugby
+sports ball|ball soccer baseball football basketball rugby volleyball
 kite
 baseball bat
 baseball glove
@@ -52,8 +52,8 @@ orange|orange lemon fruit
 broccoli
 carrot
 hot dog
-pizza
-donut
+pizza|pizza
+donut|donut
 cake|cake
 chair|chair 
 couch|couch
