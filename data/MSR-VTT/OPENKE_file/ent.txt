@@ -35,7 +35,7 @@ sports ball|ball soccer baseball football basketball rugby volleyball hockey bad
 kite
 baseball bat
 baseball glove
-skateboard|skateboard
+skateboard|skateboard skate
 surfboard
 tennis racket|tennis racket
 bottle
@@ -47,7 +47,7 @@ spoon|chopstick spoon
 bowl|pot dish pan plate bowl
 banana|fruit
 apple|fruit
-sandwich
+sandwich|sandwich hamburger
 orange|orange lemon fruit
 broccoli
 carrot
