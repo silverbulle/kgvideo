@@ -15,7 +15,7 @@ parking meter
 bench|bench
 bird|bird parrot parakeet owl
 cat|animal cat kitten kitt van 
-dog|animal dog puppy hound
+dog|animal dog puppy hound bulldog
 horse|animal horse pony
 sheep|animal
 cow|animal buffalo cow
