@@ -15,6 +15,7 @@ def readFile(file_name):
     with open(file_name, 'r', encoding="utf-8") as f:
         x = f.readlines()
     for line in x:
+        # line.replace('&', '')
         y.extend(line.split())
     word_list2 = []
 
@@ -46,7 +47,7 @@ def readFile(file_name):
     # 统计词频
     tf = {}
     for word in word_list2:
-        word = word.lower().replace('#', ' ')
+        word = word.lower().replace('#', ' ').replace('&', '')
         # print(word)
         word = ''.join(word.split())
         if word in tf:
