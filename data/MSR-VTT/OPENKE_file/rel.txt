@@ -1,1 +1,20 @@
 drive|driving drives ride
+play|play
+talk|talk discuss describe explain tell
+sing|sing
+walk|walk
+throw|throw
+run|run
+cook|cook
+wear|wear dress
+dance|dance
+interview|interview
+watch|watch
+fly|fly
+drink|drink
+read|read
+fight|fight
+draw|draw
+push|push
+pull|pull
+
