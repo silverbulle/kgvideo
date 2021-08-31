@@ -1,4 +1,4 @@
-drive|driving#drives#ride
+drive|driving#drives#ride#drive
 play|play
 talk|talk#discuss#describe#explain#tell#ask#introduce
 sing|sing
@@ -20,4 +20,3 @@ pull|pull
 roll|roll
 kiss|kiss
 lay|lay
-
