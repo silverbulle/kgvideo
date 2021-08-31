@@ -1,81 +1,81 @@
 __background
-person|man person guy woman lady she child baby girl people batman superman lincoln pedestrian coach kid band musician president obama gentleman doctor speaker medalist hero boy rhett somebody runner messi pinata blonde singer police murder player he coach bonnie couple
-female scientist cameraman youtuber chef dj vet boyfriend student actress actor mom military freddy caprio leonardo reporter elvis human pitcher nurse stranger celebrity father infant announcer politician wrestler magician assistant krueger adult grandma referee guest swimmer narrator american performer teenager beachgoer naturalist shania britney researcher junkie friend worker toddler alady addict adventurer bryant surgeon santa mcilroy michael hottie letterman cher bruce cillian williams racer driver character paleontologist worker reader stephen clinton barrett acrobat chld professor tyson loki rider catwoman smith bride killer newsreader cowboy parent daughter broadcaster hiker jordan jackson maher gymnast gymnist william shopper cruz senator husband wife saleswomen surfer clerk rapper popstar poeople sawyer asian conan sprinter jimmy tourist lesner elder ellen angela forensic patient jogger girls
-car|car vehicle automobile truck van tractor bulldozer sedan audi racecar eldorado sedan mustang lamborghinus ambulance sportscar firetruck volkswagen   
-motorcycle|motorcycle bike mini-bike motorbike
-airplane|airplane helicopter plane airport zeppelin blimp aircraft
-bus
-train
-truck
-boat|boat ski ship
-traffic light
-fire hydrant
-stop sign
-parking meter
+person|man#person#guy#woman#lady#she#child#baby#girl#people#batman#superman#lincoln#pedestrian#coach#kid#band#musician#president#obama#gentleman#doctor#speaker#medalist#hero#boy#rhett#somebody#runner#messi#pinata#blonde#singer#police#murder#player#he#coach#bonnie#couple
+female#scientist#cameraman#youtuber#chef#dj#vet#boyfriend#student#actress#actor#mom#military#freddy#caprio#leonardo#reporter#elvis#human#pitcher#nurse#stranger#celebrity#father#infant#announcer#politician#wrestler#magician#assistant#krueger#adult#grandma#referee#guest#swimmer#narrator#american#performer#teenager#beachgoer#naturalist#shania#britney#researcher#junkie#friend#worker#toddler#alady#addict#adventurer#bryant#surgeon#santa#mcilroy#michael#hottie#letterman#cher#bruce#cillian#williams#racer#driver#character#paleontologist#worker#reader#stephen#clinton#barrett#acrobat#chld#professor#tyson#loki#rider#catwoman#smith#bride#killer#newsreader#cowboy#parent#daughter#broadcaster#hiker#jordan#jackson#maher#gymnast#gymnist#william#shopper#cruz#senator#husband#wife#saleswomen#surfer#clerk#rapper#popstar#poeople#sawyer#asian#conan#sprinter#jimmy#tourist#lesner#elder#ellen#angela#forensic#patient#jogger#girls
+car|car#vehicle#automobile#truck#van#tractor#bulldozer#sedan#audi#racecar#eldorado#sedan#mustang#lamborghinus#ambulance#sportscar#firetruck#volkswagen
+motorcycle|motorcycle#bike#mini-bike#motorbike
+airplane|airplane#helicopter#plane#airport#zeppelin#blimp#aircraft
+bus|
+train|
+truck|
+boat|boat#ski#ship
+traffic light|
+fire hydrant|
+stop sign|
+parking meter|
 bench|bench
-bird|bird parrot parakeet owl
-cat|animal cat kitten kitt van 
-dog|animal dog puppy hound bulldog
-horse|animal horse pony
+bird|bird#parrot#parakeet#owl
+cat|animal#cat#kitten#kitt#van
+dog|animal#dog#puppy#hound#bulldog
+horse|animal#horse#pony
 sheep|animal
-cow|animal buffalo cow
-elephant|animal elephant
-bear
-zebra
-giraffe
+cow|animal#buffalo#cow
+elephant|animal#elephant
+bear|
+zebra|
+giraffe|
 backpack|travelbag
-umbrella
+umbrella|
 handbag|bag
-tie|scarf tie
-suitcase
-frisbee
-skis
-snowboard
-sports ball|ball soccer baseball football basketball rugby volleyball hockey badminton tennise
-kite
-baseball bat
-baseball glove
-skateboard|skateboard skate
-surfboard
-tennis racket|tennis racket
-bottle
-wine glass
-cup
-fork
-knife|kniof knife
-spoon|chopstick spoon
-bowl|pot dish pan plate bowl
+tie|scarf#tie
+suitcase|
+frisbee|
+skis|
+snowboard|
+sports ball|ball#soccer#baseball#football#basketball#rugby#volleyball#hockey#badminton#tennise
+kite|
+baseball bat|
+baseball glove|
+skateboard|skateboard#skate
+surfboard|
+tennis racket|tennis#racket
+bottle|
+wine glass|
+cup|
+fork|
+knife|kniof#knife
+spoon|chopstick#spoon
+bowl|pot#dish#pan#plate#bowl
 banana|fruit
 apple|fruit
-sandwich|sandwich hamburger
-orange|orange lemon fruit
-broccoli
-carrot
+sandwich|sandwich#hamburger
+orange|orange#lemon#fruit
+broccoli|
+carrot|
 hot dog|hotdog
 pizza|pizza
-donut|donut doughnut
+donut|donut#doughnut
 cake|cake
-chair|chair 
-couch|couch sofa
-potted plant
-bed
+chair|chair
+couch|couch#sofa
+potted plant|
+bed|
 dining table|table
-toilet|bathroom toilet
-tv|tv mtv television
-laptop|laptop pc computer coputer conputer
-mouse
-remote
+toilet|bathroom#toilet
+tv|tv#mtv#television
+laptop|laptop#pc#computer#coputer#conputer
+mouse|
+remote|
 keyboard|keyboard
-cell phone|phone speakerphone smartphone iphone cellphone handset
-microwave
-oven
-toaster
+cell phone|phone#speakerphone#smartphone#iphone#cellphone#handset
+microwave|
+oven|
+toaster|
 sink|sink
-refrigerator
-book
-clock
-vase
+refrigerator|
+book|
+clock|
+vase|
 scissors|clipper
-teddy bear|toy doll
-hair drier
-toothbrush|brush toothbrush
+teddy bear|toy#doll
+hair drier|
+toothbrush|brush#toothbrush

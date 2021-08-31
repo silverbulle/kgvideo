@@ -1,12 +1,12 @@
-drive|driving drives ride
+drive|driving#drives#ride
 play|play
-talk|talk discuss describe explain tell
+talk|talk#discuss#describe#explain#tell#ask#introduce
 sing|sing
 walk|walk
 throw|throw
 run|run
 cook|cook
-wear|wear dress
+wear|wear#dress
 dance|dance
 interview|interview
 watch|watch
@@ -14,7 +14,10 @@ fly|fly
 drink|drink
 read|read
 fight|fight
-draw|draw
+write|draw#write
 push|push
 pull|pull
+roll|roll
+kiss|kiss
+lay|lay
 
