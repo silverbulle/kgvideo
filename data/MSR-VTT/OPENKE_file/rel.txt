@@ -19,4 +19,3 @@ push|push
 pull|pull
 roll|roll
 kiss|kiss
-lay|lay
