@@ -5,8 +5,8 @@ ent_induction = '../MSR-VTT/OPENKE_file/ent.txt'
 target = '../MSR-VTT/OPENKE_file/entity_total_try.txt'
 entity2id = '../MSR-VTT/OPENKE_file/msrvtt/entity.txt'
 relation2id = '../MSR-VTT/OPENKE_file/msrvtt/relation2id.txt'
-total = '../MSR-VTT/OPENKE_file/msrvtt/total.txt'
-train = '../MSR-VTT/OPENKE_file/msrvtt/train.txt'
+total = '../MSR-VTT/OPENKE_file/msrvtt/total_word.txt'
+total_id = '../MSR-VTT/OPENKE_file/msrvtt/total_id.txt'
 test = '../MSR-VTT/OPENKE_file/msrvtt/test.txt'
 valid = '../MSR-VTT/OPENKE_file/msrvtt/valid.txt'
 
@@ -70,7 +70,7 @@ t = open(target, 'r')
 r1 = open(relation2id, 'r')
 r2 = open(entity2id, 'r')
 r3 = open(total, 'r')
-w_train = open(train, 'w')
+total_id = open(total_id, 'w')
 w_test = open(test, 'w')
 w_valid = open(valid, 'w')
 
@@ -96,6 +96,6 @@ for line in tqdm(total):
         continue
     for i in range(3):
         if i == 0 or i == 1:
-            w_train.write(str(entdict[word[i]]) + ',')
+            w_train.write(str(entdict[word[i]]) + ' ')
         elif i == 2:
             w_train.write(str(reldict[word[i]]) + '\n')
