@@ -7,7 +7,7 @@ def ReadFileDatas(original_filename):
     FileNameList = file.readlines()
     random.shuffle(FileNameList)
     file.close()
-    print("，umber of dataset:", len(FileNameList))
+    print("Nmber of dataset:", len(FileNameList))
     return FileNameList
 
 
