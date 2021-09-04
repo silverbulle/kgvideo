@@ -96,6 +96,6 @@ for line in tqdm(total):
         continue
     for i in range(3):
         if i == 0 or i == 1:
-            w_train.write(str(entdict[word[i]]) + ' ')
+            total_id.write(str(entdict[word[i]]) + ' ')
         elif i == 2:
-            w_train.write(str(reldict[word[i]]) + '\n')
+            total_id.write(str(reldict[word[i]]) + '\n')
