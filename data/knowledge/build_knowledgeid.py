@@ -15,7 +15,8 @@ ent_induction_lines = f2.readlines()
 cnt = 1
 for line in rel_induction_lines:
     step1 = line.split('|')
-    w1.writelines("{0:100}{1}".format(step1[0], cnt))  # write rel2id
+    # w1.writelines("{0:100}{1}".format(step1[0], cnt))  # write rel2id
+    w1.writelines(step1[0].replace(' ', '') + '\t' + str(cnt))
     w1.writelines('\n')
     cnt += 1
 w1.close()
@@ -23,7 +24,8 @@ w1.close()
 cnt = 1
 for line in ent_induction_lines:
     step1 = line.split('|')
-    w2.writelines("{0:100}{1}".format((step1[0]), cnt))  # write ent2id
+    # w2.writelines("{0:100}{1}".format((step1[0]), cnt))  # write ent2id
+    w2.writelines(step1[0].replace(' ', '') + '\t' + str(cnt))
     w2.writelines('\n')
     cnt += 1
 w2.close()

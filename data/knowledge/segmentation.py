@@ -38,7 +38,8 @@ def WriteDatasToFile(listInfo, new_filename):
 
 
 if __name__ == "__main__":
-    listFileInfo = ReadFileDatas('../MSR-VTT/OPENKE_file/msrvtt/total_id.txt')
+    listFileInfo = ReadFileDatas('../MSR-VTT/OPENKE_file/msrvtt/b.txt')
+    # listFileInfo = ReadFileDatas('../MSR-VTT/OPENKE_file/msrvtt/total_id.txt')
     l_train, l_val, l_test = TrainValTestFile(listFileInfo)
     WriteDatasToFile(l_train, '../MSR-VTT/OPENKE_file/msrvtt/train.txt')
     WriteDatasToFile(l_val, '../MSR-VTT/OPENKE_file/msrvtt/valid.txt')
