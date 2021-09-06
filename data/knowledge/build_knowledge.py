@@ -96,6 +96,8 @@ for line in tqdm(total):
         continue
     for i in range(3):
         if i == 0 or i == 1:
+            assert 0 <= entdict[word[i]] <= 79, "entity id get some trouble!!!"
             total_id.write(str(entdict[word[i]]) + ' ')
         elif i == 2:
+            assert 0 <= reldict[word[i]] <= 20, "relation id get some trouble!!!"
             total_id.write(str(reldict[word[i]]) + '\n')

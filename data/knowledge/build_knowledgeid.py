@@ -12,7 +12,7 @@ w2 = open(entity2id, 'w')
 rel_induction_lines = f1.readlines()
 ent_induction_lines = f2.readlines()
 
-cnt = 1
+cnt = 0
 for line in rel_induction_lines:
     step1 = line.split('|')
     # w1.writelines("{0:100}{1}".format(step1[0], cnt))  # write rel2id
@@ -21,7 +21,7 @@ for line in rel_induction_lines:
     cnt += 1
 w1.close()
 
-cnt = 1
+cnt = 0
 for line in ent_induction_lines:
     step1 = line.split('|')
     # w2.writelines("{0:100}{1}".format((step1[0]), cnt))  # write ent2id
