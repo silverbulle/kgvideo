@@ -43,8 +43,8 @@ class FeatureConfig(object):
     # model = "MSVD_InceptionV4"
     # model = "MSVD_ResNet152"
     # model = "MSR-VTT_ResNet152"
-    # model = "MSR-VTT_ResNet152+I3D"
-    model = "MSR-VTT_ResNet152+I3D+OFeat"
+    model = "MSR-VTT_ResNet152+I3D"
+    # model = "MSR-VTT_ResNet152+I3D+OFeat"
     # model = "MSVD_ResNet152+I3D"
     # model = "MSVD_InceptionV4+I3D"
     # model = "MSVD_I3D"
@@ -155,9 +155,9 @@ class TrainConfig(object):
     """ Optimization """
     epochs = {
         'MSVD': 30,
-        'MSR-VTT': 1,
+        'MSR-VTT': 30,
     }[corpus]
-    batch_size = 32
+    batch_size = 16
     # batch_size = 64
     # batch_size = 1
     shuffle = True

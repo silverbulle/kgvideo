@@ -19,7 +19,7 @@ class LossChecker:
     def __init__(self, num_losses):
         self.num_losses = num_losses
 
-        self.losses = [ [] for _ in range(self.num_losses) ]
+        self.losses = [[] for _ in range(self.num_losses)]
 
     def update(self, *loss_vals):
         assert len(loss_vals) == self.num_losses
@@ -28,7 +28,7 @@ class LossChecker:
             self.losses[i].append(loss_val)
 
     def mean(self, last=0):
-        mean_losses = [ 0. for _ in range(self.num_losses) ]
+        mean_losses = [0. for _ in range(self.num_losses)]
         for i, loss in enumerate(self.losses):
             _loss = loss[-last:]
             mean_losses[i] = sum(_loss) / len(_loss)
@@ -38,7 +38,7 @@ class LossChecker:
 def parse_batch(batch, feature_mode):
     if feature_mode == 'one':
         vids, feats, captions = batch
-        feats = [ feat.cuda() for feat in feats ]
+        feats = [feat.cuda() for feat in feats]
         feats = torch.cat(feats, dim=2)
         captions = captions.long().cuda()
         return vids, feats, captions
@@ -94,7 +94,7 @@ def train(e, model, optimizer, train_iter, vocab, gradient_clip, feature_mode):
             torch.nn.utils.clip_grad_norm_(model.parameters(), gradient_clip)
         optimizer.step()
 
-        loss_checker.update(loss.item())  #, cross_entropy_loss.item())#, entropy_loss.item())
+        loss_checker.update(loss.item())  # , cross_entropy_loss.item())#, entropy_loss.item())
         # t.set_description("[Epoch #{0}] loss: {2:.3f} = (CE: {3:.3f}) + (Ent: {1} * {4:.3f})".format(
         #     e, reg_lambda, *loss_checker.mean(last=10)))
         t.set_description("[Epoch #{0}] loss: {1:.3f}".format(e, *loss_checker.mean(last=10)))
@@ -149,13 +149,12 @@ def get_predicted_captions(data_iter, model, feature_mode):
                 for vid, image_feat, motion_feat, object_feat in zip(vids, feats[0], feats[1], feats[2]):
                     if vid not in onlyonce_dataset:
                         onlyonce_dataset[vid] = (image_feat, motion_feat, object_feat)
-            del vids, feats, _
-
-                # print('waiting------------------------, i\'m trying to solve this------')
+            # del vids, feats, _
+            # print('waiting------------------------, i\'m trying to solve this------')
         onlyonce_iter = []
         vids = list(onlyonce_dataset.keys())
         feats = list(onlyonce_dataset.values())
-        # batch_size = 100
+        # batch_size = 200
         batch_size = 1
         while len(vids) > 0:
             if feature_mode == 'one':
@@ -188,14 +187,15 @@ def get_predicted_captions(data_iter, model, feature_mode):
 
     vid2pred = {}
     # EOS_idx = vocab.word2idx['<EOS>']
-    for vids, feats in onlyonce_iter:
-        # captions = model.greed_decode(feats, C.loader.max_caption_len)
-        captions = model.beam_search_decode(feats, C.beam_size, C.loader.max_caption_len)
-        captions = [" ".join(caption[0].value) for caption in captions]
-        # captions = [for for caption in captions]
-        # captions = [ idxs_to_sentence(caption, vocab.idx2word, EOS_idx) for caption in captions ]
-        vid2pred.update({ v: p for v, p in zip(vids, captions) })
-    return vid2pred
+    with torch.no_grad():
+        for vids, feats in onlyonce_iter:
+            # captions = model.greed_decode(feats, C.loader.max_caption_len)
+            captions = model.beam_search_decode(feats, C.beam_size, C.loader.max_caption_len)
+            captions = [" ".join(caption[0].value) for caption in captions]
+            # captions = [for for caption in captions]
+            # captions = [ idxs_to_sentence(caption, vocab.idx2word, EOS_idx) for caption in captions ]
+            vid2pred.update({v: p for v, p in zip(vids, captions)})
+        return vid2pred
 
 
 def get_groundtruth_captions(data_iter, vocab, feature_mode):
@@ -214,9 +214,9 @@ def get_groundtruth_captions(data_iter, vocab, feature_mode):
 
 def score(vid2pred, vid2GTs):
     assert set(vid2pred.keys()) == set(vid2GTs.keys())
-    vid2idx = { v: i for i, v in enumerate(vid2pred.keys()) }
-    refs = { vid2idx[vid]: GTs for vid, GTs in vid2GTs.items() }
-    hypos = { vid2idx[vid]: [ pred ] for vid, pred in vid2pred.items() }
+    vid2idx = {v: i for i, v in enumerate(vid2pred.keys())}
+    refs = {vid2idx[vid]: GTs for vid, GTs in vid2GTs.items()}
+    hypos = {vid2idx[vid]: [pred] for vid, pred in vid2pred.items()}
 
     scores = calc_scores(refs, hypos)
     return scores
@@ -273,7 +273,7 @@ def idxs_to_sentence(idxs, idx2word, EOS_idx):
 
 def cls_to_dict(cls):
     properties = dir(cls)
-    properties = [ p for p in properties if not p.startswith("__") ]
+    properties = [p for p in properties if not p.startswith("__")]
     d = {}
     for p in properties:
         v = getattr(cls, p)
@@ -293,7 +293,7 @@ class Struct:
 def dict_to_cls(d):
     cls = Struct(**d)
     properties = dir(cls)
-    properties = [ p for p in properties if not p.startswith("__") ]
+    properties = [p for p in properties if not p.startswith("__")]
     for p in properties:
         v = getattr(cls, p)
         if isinstance(v, dict) and 'was_class' in v and v['was_class']:
@@ -335,6 +335,5 @@ def save_result(vid2pred, vid2GTs, save_fpath):
             else:
                 GTs = ' / '.join(vid2GTs[vid])
             pred = vid2pred[vid]
-            line = ', '.join([ str(vid), pred, GTs ])
+            line = ', '.join([str(vid), pred, GTs])
             fout.write("{}\n".format(line))
-

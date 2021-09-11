@@ -322,9 +322,9 @@ class Corpus(object):
         self.test_dataset = self.build_dataset(
             "test", self.C.loader.test_caption_fpath)
 
-        self.train_data_loader = self.build_data_loader(self.train_dataset)
-        self.val_data_loader = self.build_data_loader(self.val_dataset)
-        self.test_data_loader = self.build_data_loader(self.test_dataset)
+        self.train_data_loader = self.build_data_loader(self.train_dataset, phase='train')
+        self.val_data_loader = self.build_data_loader(self.val_dataset, phase='val')
+        self.test_data_loader = self.build_data_loader(self.test_dataset, phase='test')
 
     def build_dataset(self, phase, caption_fpath):
         dataset = self.CustomDataset(
@@ -401,7 +401,7 @@ class Corpus(object):
 
         return vids, video_feats_list, captions
 
-    def build_data_loader(self, dataset):
+    def build_data_loader(self, dataset, phase):
         if self.feature_mode == 'one':
             collate_fn = self.one_feature_collate_fn
         elif self.feature_mode == 'two':
@@ -411,9 +411,13 @@ class Corpus(object):
         else:
             raise NotImplementedError(
                 "Unknown feature mode: {}".format(self.feature_mode))
+        if phase == 'test':
+            batch_size = 1
+        else:
+            batch_size = self.C.batch_size
         data_loader = DataLoader(
             dataset,
-            batch_size=self.C.batch_size,
+            batch_size=batch_size,
             shuffle=False,  # If sampler is specified, shuffle must be False.
             sampler=RandomSampler(dataset, replacement=False),
             num_workers=self.C.loader.num_workers,

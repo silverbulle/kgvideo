@@ -1,9 +1,9 @@
 from tqdm import trange
 entity_rel_path = '../MSR-VTT/metadata/entity_total.txt'
 # relation_total_path = '../MSR-VTT/OPENKE_file/relation_total.txt'
-openke_train_file = '../MSR-VTT/OPENKE_file/train.txt'
-openke_valid_file = '../MSR-VTT/OPENKE_file/valid.txt'
-openke_test_file = '../MSR-VTT/OPENKE_file/test.txt'
+# openke_train_file = '../MSR-VTT/OPENKE_file/train.txt'
+# openke_valid_file = '../MSR-VTT/OPENKE_file/valid.txt'
+# openke_test_file = '../MSR-VTT/OPENKE_file/test.txt'
 entity_id_file = '../MSR-VTT/OPENKE_file/entity.txt'
 relation_id_file = '../MSR-VTT/OPENKE_file/relation2id.txt'
 
