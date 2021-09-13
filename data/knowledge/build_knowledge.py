@@ -3,12 +3,12 @@ from tqdm import tqdm
 rel_induction = '../MSR-VTT/OPENKE_file/rel.txt'
 ent_induction = '../MSR-VTT/OPENKE_file/ent.txt'
 target = '../MSR-VTT/OPENKE_file/entity_total_try.txt'
-entity2id = '../MSR-VTT/OPENKE_file/msrvtt/entity.txt'
+entity2id = '../MSR-VTT/OPENKE_file/msrvtt/entity2id.txt'
 relation2id = '../MSR-VTT/OPENKE_file/msrvtt/relation2id.txt'
 total = '../MSR-VTT/OPENKE_file/msrvtt/total_word.txt'
 total_id = '../MSR-VTT/OPENKE_file/msrvtt/total_id.txt'
-test = '../MSR-VTT/OPENKE_file/msrvtt/test.txt'
-valid = '../MSR-VTT/OPENKE_file/msrvtt/valid.txt'
+# test = '../MSR-VTT/OPENKE_file/msrvtt/test.txt'
+# valid = '../MSR-VTT/OPENKE_file/msrvtt/valid.txt'
 
 f1 = open(rel_induction, 'r')
 f2 = open(ent_induction, 'r')
@@ -96,7 +96,7 @@ for line in tqdm(total):
         continue
     for i in range(3):
         if i == 0 or i == 1:
-            assert 0 <= entdict[word[i]] <= 79, "entity id get some trouble!!!"
+            assert 0 <= entdict[word[i]] <= 80, "entity id get some trouble!!!"
             total_id.write(str(entdict[word[i]]) + ' ')
         elif i == 2:
             assert 0 <= reldict[word[i]] <= 20, "relation id get some trouble!!!"

@@ -4,7 +4,7 @@ entity_rel_path = '../MSR-VTT/metadata/entity_total.txt'
 # openke_train_file = '../MSR-VTT/OPENKE_file/train.txt'
 # openke_valid_file = '../MSR-VTT/OPENKE_file/valid.txt'
 # openke_test_file = '../MSR-VTT/OPENKE_file/test.txt'
-entity_id_file = '../MSR-VTT/OPENKE_file/entity.txt'
+entity_id_file = '../MSR-VTT/OPENKE_file/entity2id.txt'
 relation_id_file = '../MSR-VTT/OPENKE_file/relation2id.txt'
 
 f = open(entity_rel_path, 'r')
@@ -35,11 +35,13 @@ for line in lines:
 
 f.close()
 for lens in range(len(entity_id_list)):
-    w1.writelines("{0:100}{1}".format(entity_id_list[lens], str(lens)))
+    # w1.writelines("{0:100}{1}".format(entity_id_list[lens], str(lens)))
+    w1.writelines(entity_id_list[lens] + '\t' + str(lens))
     w1.writelines('\n')
     cnt += 1
 for lens in range(len(relation_id_list)):
-    w2.writelines("{0:100}{1}".format(relation_id_list[lens], str(lens)))
+    # w2.writelines("{0:100}{1}".format(relation_id_list[lens], str(lens)))
+    w2.writelines(relation_id_list[lens] + '\t' + str(lens))
     w2.writelines('\n')
     rel += 1
 w1.close()

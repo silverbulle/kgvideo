@@ -1,7 +1,7 @@
 
 rel_induction = '../MSR-VTT/OPENKE_file/rel.txt'
 ent_induction = '../MSR-VTT/OPENKE_file/ent.txt'
-entity2id = '../MSR-VTT/OPENKE_file/msrvtt/entity.txt'
+entity2id = '../MSR-VTT/OPENKE_file/msrvtt/entity2id.txt'
 relation2id = '../MSR-VTT/OPENKE_file/msrvtt/relation2id.txt'
 
 f1 = open(rel_induction, 'r')
