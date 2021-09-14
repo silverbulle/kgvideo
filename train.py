@@ -31,6 +31,7 @@ def build_model(vocab):
     model = Transformer(C.feat.size, vocab, C.transformer.d_model, C.transformer.d_ff,
                         C.transformer.n_heads, C.transformer.n_layers, C.transformer.dropout, C.feat.feature_mode)
     if C.pretrained_decoder_fpath is not None:
+        # model = torch.nn.DataParallel(model)
         model.load_state_dict(torch.load(C.pretrained_decoder_fpath)['transformer'])
         print("Pretrained decoder is loaded from {}".format(C.pretrained_decoder_fpath))
 

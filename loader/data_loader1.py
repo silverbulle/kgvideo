@@ -17,7 +17,7 @@ class CustomVocab(object):
     def __init__(self, caption_fpath, init_word2idx, min_count=1, transform=str.split):
         self.caption_fpath = caption_fpath
         self.min_count = min_count
-        self.transform = transform  #load method to operate captions(ground trueth)
+        self.transform = transform  # load method to operate captions(ground trueth)
 
         self.word2idx = init_word2idx
         self.idx2word = {v: k for k, v in self.word2idx.items()}
@@ -153,7 +153,7 @@ class CustomDataset(Dataset):
                                                                     self.phase)
             fin = h5py.File(fpath, 'r')
             for vid in fin.keys():
-                feats = fin[vid].value
+                feats = fin[vid][()]
                 if len(feats) < self.C.loader.frame_sample_len:
                     num_paddings = self.C.loader.frame_sample_len - len(feats)
                     feats = feats.tolist() + [np.zeros_like(feats[0])

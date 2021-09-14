@@ -17,8 +17,9 @@ import os
 train_iter, val_iter, test_iter, vocab = train.build_loaders()
 model = train.build_model(vocab)
 # del train_iter, val_iter
-# ckpt_path = '/home/silverbullet/pyproject/main/checkpoints_MSR-VTT_ResNet152+I3D+OFeat/Transformer_baseline | MSR-VTT | FEAT MSR-VTT_ResNet152+I3D+OFeat fsl-50 mcl-20 | EMB 512 | Transformer d-512-N-3-h-8 | OPTIM AMSGrad lr-0.0002-dc-20-0.5-10-wd-1e-05 | bs-32 gc-5.0 | Wed May 26 15:46:51 2021/17.ckpt'
-ckpt_path ='/home/silverbullet/pyproject/main/checkpoints_MSR-VTT_ResNet152+I3D/Transformer_baseline | MSR-VTT | FEAT MSR-VTT_ResNet152+I3D fsl-50 mcl-20 | EMB 512 | Transformer d-512-N-3-h-8 | OPTIM AMSGrad lr-0.0002-dc-20-0.5-10-wd-1e-05 | bs-32 gc-5.0 | Mon May 17 15:34:33 2021/13.ckpt'
+# Remember to change the mode in config before modifying the load path of ckpt file
+ckpt_path = '/home/silverbullet/pyproject/main/checkpoints_MSR-VTT_ResNet152+I3D+OFeat/Transformer_baseline | MSR-VTT | FEAT MSR-VTT_ResNet152+I3D+OFeat fsl-50 mcl-20 | EMB 512 | Transformer d-512-N-3-h-8 | OPTIM AMSGrad lr-0.0002-dc-20-0.5-10-wd-1e-05 | bs-32 gc-5.0 | Wed May 26 15:46:51 2021/17.ckpt'
+# ckpt_path ='/home/silverbullet/pyproject/main/checkpoints_MSR-VTT_ResNet152+I3D/Transformer_baseline | MSR-VTT | FEAT MSR-VTT_ResNet152+I3D fsl-50 mcl-20 | EMB 512 | Transformer d-512-N-3-h-8 | OPTIM AMSGrad lr-0.0002-dc-20-0.5-10-wd-1e-05 | bs-32 gc-5.0 | Mon May 17 15:34:33 2021/13.ckpt'
 
 with torch.no_grad():
     best_model = load_checkpoint(model, ckpt_path)
