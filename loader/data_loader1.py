@@ -184,10 +184,11 @@ class CustomDataset(Dataset):
                                                                     '_' +
                                                                     models[i],
                                                                     self.phase)
+            
             fin = h5py.File(fpath, 'r')
             for vid in fin.keys():
                 # vid = 'video122'
-                feats = fin[vid].value
+                feats = fin[vid][()]
                 if len(feats) < frames:
                     num_paddings = frames - len(feats)
                     if feats.size == 0:
