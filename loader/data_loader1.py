@@ -162,7 +162,8 @@ class CustomDataset(Dataset):
 
                 # Sample fixed number of frames
                 sampled_idxs = np.linspace(
-                    0, len(feats) - 1, self.C.loader.frame_sample_len, dtype=int)  # return evenly sapced number within the specified
+                    0, len(feats) - 1, self.C.loader.frame_sample_len,
+                    dtype=int)  # return evenly sapced number within the specified
                 feats = feats[sampled_idxs]
                 assert len(feats) == self.C.loader.frame_sample_len
                 if i == 0:
@@ -171,10 +172,47 @@ class CustomDataset(Dataset):
                     self.motion_video_feats[vid].append(feats)
             fin.close()
 
+    def load_object_feats(self, models, frames):  # It's too complex so write another function
+        fpath_o = self.C.loader.phase_video_feat_fpath_tpl.format(self.C.corpus,
+                                                                   self.C.corpus +
+                                                                   '_' +
+                                                                   models[2],
+                                                                   self.phase)
+        fpath_b = self.C.loader.phase_video_feat_fpath_tpl.format(self.C.corpus,
+                                                                   self.C.corpus +
+                                                                   '_' +
+                                                                   'BFeat',
+                                                                   self.phase)  # load two feats at the sames time
+
+        fin_o = h5py.File(fpath_o, 'r')
+        fin_b = h5py.File(fpath_b, 'r')
+        for vid, vid1 in zip(fin_o.keys(), fin_b.keys()):
+            # vid = 'video122'
+            assert vid == vid1, "video id of OFeat and BFeat is not align"
+            feats_b = fin_b[vid][()]
+            feats_o = fin_o[vid][()]
+            feats = np.concatenate((feats_b, feats_o), axis=1)
+            if len(feats) < frames:
+                num_paddings = frames - len(feats)
+                if feats.size == 0:
+                    feats = np.zeros((frames, 1028))  # now just object feat may appear the feature is empty
+                else:
+                    feats = feats.tolist() + [np.zeros_like(feats[0])
+                                                  for _ in range(num_paddings)]
+                feats = np.asarray(feats)
+                sampled_idxs = np.linspace(
+                    0, len(feats_o) - 1, frames, dtype=int)  # return evenly sapced number within the specified
+                feats = feats[sampled_idxs]
+                assert len(feats) == frames
+        fin_b.close()
+        fin_o.close()
+        return feats
+
     def load_three_video_feats(self):
         models = self.C.feat.model.split('_')[1].split('+')
         print('Enter the load3 method---------------------------------')
         for i in range(len(models)):
+            print('Begin to start load %d feats, total are %d' % (i+1, len(models)))
             frames = self.C.loader.frame_sample_len
             # i = 2
             if i == 2:
@@ -184,19 +222,25 @@ class CustomDataset(Dataset):
                                                                     '_' +
                                                                     models[i],
                                                                     self.phase)
-            
+
             fin = h5py.File(fpath, 'r')
             for vid in fin.keys():
                 # vid = 'video122'
                 feats = fin[vid][()]
                 if len(feats) < frames:
+                    if i == 2:
+                        feats = self.load_object_feats(models, frames)
+                        self.object_video_feats[vid].append(feats)
+                        # continue
+                        print("Finish the OFeat and BFeat load!  break from load_three_video_feats method")
+                        break
                     num_paddings = frames - len(feats)
                     if feats.size == 0:
                         # for _ in range(num_paddings):
                         feats = np.zeros((frames, 1024))  # now just object feat may appear the feature is empty
                     else:
                         feats = feats.tolist() + [np.zeros_like(feats[0])
-                                                      for _ in range(num_paddings)]
+                                                  for _ in range(num_paddings)]
                     # feats = feats.tolist() + [np.zeros_like(feats[0])
                     #                           for _ in range(num_paddings)]
                     feats = np.asarray(feats)
@@ -211,7 +255,6 @@ class CustomDataset(Dataset):
                     elif i == 2:
                         self.object_video_feats[vid].append(feats)
             fin.close()
-
 
     def load_captions(self):
         raise NotImplementedError("You should implement this function.")
@@ -350,7 +393,7 @@ class Corpus(object):
         motion_video_feats_list = [torch.stack(
             video_feats) for video_feats in motion_video_feats_list]
         motion_video_feats_list = [video_feats.float()
-                                  for video_feats in motion_video_feats_list]
+                                   for video_feats in motion_video_feats_list]
 
         object_video_feats_list = [torch.stack(
             video_feats) for video_feats in object_video_feats_list]

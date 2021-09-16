@@ -50,7 +50,7 @@ class FeatureConfig(object):
     # model = "MSVD_I3D"
     size = None
     feature_mode = None
-    num_boxes = 50
+    num_boxes = 20
     # model = models[0]
     if model == 'MSVD_I3D' or model == 'MSR-VTT_I3D':
         size = 1024
@@ -68,7 +68,7 @@ class FeatureConfig(object):
         size = [1536, 1024]
         feature_mode = 'two'
     elif model == 'MSR-VTT_ResNet152+I3D+OFeat':
-         size = [2048, 1024, 1024]
+         size = [2048, 1024, 1028]
          feature_mode = 'three'
     else:
         raise NotImplementedError("Unknown model: {}".format(model))
