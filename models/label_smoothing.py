@@ -5,7 +5,7 @@ from torch.autograd import Variable
 
 class LabelSmoothing(nn.Module):
     """Implement label smoothing."""
-    
+
     def __init__(self, size, padding_idx, smoothing=0.0):
         super(LabelSmoothing, self).__init__()
         self.criterion = nn.KLDivLoss(reduction='sum')
@@ -14,7 +14,7 @@ class LabelSmoothing(nn.Module):
         self.smoothing = smoothing
         self.size = size
         self.true_dist = None
-    
+
     def forward(self, x, target):
         assert x.size(1) == self.size
         true_dist = x.data.clone()
