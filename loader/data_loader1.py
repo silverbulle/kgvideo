@@ -178,11 +178,11 @@ class CustomDataset(Dataset):
         # assert vid == vid1, "video id of OFeat and BFeat is not align"
         feats_b = fin_b[vid][()]
         feats_o = fin_o[vid][()]
-        to = torch.Tensor(feats_o).cuda()
-        tb = torch.Tensor(feats_b).cuda()
-        feats = torch.cat((tb, to), 1).cpu().numpy()
+        # to = torch.Tensor(feats_o).cuda()
+        # tb = torch.Tensor(feats_b).cuda()
+        # feats = torch.cat((tb, to), 1).cpu().numpy()
         # feats = np.hstack((feats_b, feats_o))
-        # feats = np.concatenate((feats_b, feats_o), axis=1)
+        feats = np.concatenate((feats_b, feats_o), axis=1)
         num_paddings = frames - len(feats)
         if feats.size == 0:
             feats = np.zeros((frames, 1028))  # now just object feat may appear the feature is empty
@@ -227,7 +227,6 @@ class CustomDataset(Dataset):
 
                         feats = self.load_object_feats(frames=frames, fin_o=fin, fin_b=fin_b, vid=vid)
                         self.object_video_feats[vid].append(feats)
-                        # continue
                         # print("Finish the OFeat and BFeat load!  break from load_three_video_feats method")
                         continue
                     num_paddings = frames - len(feats)
@@ -284,7 +283,8 @@ class CustomDataset(Dataset):
                 if self.object_video_feats[vid]:
                     object_video_feats = self.object_video_feats[vid]
                 else:
-                    object_video_feats = list(np.zeros((1, self.C.feat.num_boxes, 1024)))
+                    object_video_feats = list(np.zeros((1, self.C.feat.num_boxes, self.C.msrvtt_dim)))
+                    # self.C.FeatureConfig.size[-1]
                 for caption in self.captions[vid]:
                     self.data.append((vid, image_video_feats, motion_video_feats, object_video_feats, caption))
         else:

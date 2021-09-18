@@ -50,7 +50,7 @@ class FeatureConfig(object):
     # model = "MSVD_I3D"
     size = None
     feature_mode = None
-    num_boxes = 20
+    num_boxes = 50
     # model = models[0]
     if model == 'MSVD_I3D' or model == 'MSR-VTT_I3D':
         size = 1024
@@ -139,6 +139,7 @@ class EvalConfig(object):
 
 class TrainConfig(object):
     corpus = 'MSR-VTT'; assert corpus in [ 'MSVD', 'MSR-VTT' ]
+    msrvtt_dim = 1028
     # corpus = 'MSVD';
     # assert corpus in ['MSVD', 'MSR-VTT']
 
