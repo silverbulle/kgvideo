@@ -6,7 +6,7 @@ import time
 class MSVDSplitConfig(object):
     # model = "MSVD_InceptionV4"
     model = "MSVD_ResNet152"
-    
+
     video_fpath = "../data/MSVD/features/{}.hdf5".format(model)
     caption_fpath = "../data/MSVD/metadata/MSR Video Description Corpus.csv"
 
@@ -68,15 +68,18 @@ class FeatureConfig(object):
         size = [1536, 1024]
         feature_mode = 'two'
     elif model == 'MSR-VTT_ResNet152+I3D+OFeat':
-         size = [2048, 1024, 1028]
-         feature_mode = 'three'
+        size = [2048, 1024, 1028]
+        feature_mode = 'three'
+    elif model == 'MSR-VTT_ResNet152+I3D+OFeat+Rel':
+        size = [2048, 1024, 1028, 512]
+        feature_mode = 'four'
     else:
         raise NotImplementedError("Unknown model: {}".format(model))
 
 
 class VocabConfig(object):
     # init_word2idx = { '<PAD>': 0, '<BOS>': 1, '<EOS>': 2, '<UNK>': 3}
-    init_word2idx = { '<PAD>': 0, '<BOS>': 1, '<EOS>': 2}
+    init_word2idx = {'<PAD>': 0, '<BOS>': 1, '<EOS>': 2}
     embedding_size = 512
 
 
@@ -94,12 +97,14 @@ class MSVDLoaderConfig(object):
 
     total_video_feat_fpath_tpl = "./data/{}/features/{}.hdf5"
     phase_video_feat_fpath_tpl = "./data/{}/features/{}_{}.hdf5"
-    frame_sampling_method = 'uniform'; assert frame_sampling_method in [ 'uniform', 'random' ]
+    frame_sampling_method = 'uniform';
+    assert frame_sampling_method in ['uniform', 'random']
     # frame_max_len = 100
     frame_sample_len = 50
 
     # num_workers = 6
     num_workers = 0
+
 
 class MSRVTTLoaderConfig(object):
     n_train = 5175
@@ -115,12 +120,14 @@ class MSRVTTLoaderConfig(object):
 
     total_video_feat_fpath_tpl = "data/{}/features/{}.hdf5"
     phase_video_feat_fpath_tpl = "data/{}/features/{}_{}.hdf5"
-    frame_sampling_method = 'uniform'; assert frame_sampling_method in [ 'uniform', 'random' ]
+    frame_sampling_method = 'uniform';
+    assert frame_sampling_method in ['uniform', 'random']
     frame_max_len = 80
     frame_sample_len = 50
 
     # num_workers = 6
     num_workers = 0
+
 
 class TransformerConfig(object):
     d_model = 512
@@ -135,10 +142,11 @@ class TransformerConfig(object):
 class EvalConfig(object):
     model_fpath = "/home/wy/PycharmProjects/ABDVC_py2.7/checkpoints/Transformer_baseline | MSVD | FEAT MSVD_ResNet152 mfl-100 fsl-80 mcl-20 | EMB 512 | Transformer d-512-N-2-h-8 | OPTIM AMSGrad lr-0.0001-dc-20-0.2-5-wd-1e-05 rg-0.0 | bs-32 gc-5.0 | Mon Nov 16 20:59:26 2020/best.ckpt"
     result_dpath = "results"
-    
+
 
 class TrainConfig(object):
-    corpus = 'MSR-VTT'; assert corpus in [ 'MSVD', 'MSR-VTT' ]
+    corpus = 'MSR-VTT';
+    assert corpus in ['MSVD', 'MSR-VTT']
     msrvtt_dim = 1028
     # corpus = 'MSVD';
     # assert corpus in ['MSVD', 'MSR-VTT']
@@ -191,7 +199,7 @@ class TrainConfig(object):
     # feat_id = "FEAT {} mfl-{} fsl-{} mcl-{}".format('+'.join(feat.models), loader.frame_max_len,
     #                                                 loader.frame_sample_len, loader.max_caption_len)
     feat_id = "FEAT {} fsl-{} mcl-{}".format(feat.model, loader.frame_sample_len, loader.max_caption_len)
-    
+
     embedding_id = "EMB {}".format(vocab.embedding_size)
     transformer_id = "Transformer d-{}-N-{}-h-{}".format(transformer.d_model, transformer.n_layers, transformer.n_heads)
     optimizer_id = "OPTIM {} lr-{}-dc-{}-{}-{}-wd-{}".format(
@@ -201,7 +209,8 @@ class TrainConfig(object):
         hyperparams_id += " gc-{}".format(gradient_clip)
 
     timestamp = time.asctime(time.localtime(time.time()))
-    model_id = " | ".join([ exp_id, corpus, feat_id, embedding_id, transformer_id, optimizer_id, hyperparams_id, timestamp ])
+    model_id = " | ".join(
+        [exp_id, corpus, feat_id, embedding_id, transformer_id, optimizer_id, hyperparams_id, timestamp])
 
     """ Log """
     log_dpath = "logs_{}/{}".format(feat.model, model_id)
@@ -218,7 +227,3 @@ class TrainConfig(object):
     tx_val_cross_entropy_loss = "loss/val/transformer_CE"
     tx_val_entropy_loss = "loss/val/transformer_reg"
     tx_lr = "params/transformer_LR"
-
-
-
-
