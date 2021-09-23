@@ -136,7 +136,7 @@ class CustomDataset(Dataset):
             if self.transform_caption:
                 caption = self.transform_caption(caption)
 
-            return vid, image_video_feats, motion_video_feats, object_video_feats, caption
+            return vid, image_video_feats, motion_video_feats, object_video_feats, rel_feats, caption
         else:
             raise NotImplementedError(
                 "Unknown feature mode: {}".format(self.feature_mode))
@@ -279,6 +279,8 @@ class CustomDataset(Dataset):
             # i = 2
             if i == 2:
                 frames = self.C.feat.num_boxes
+            if i == 3:
+                frames = self.C.feat.three_turple
             fpath = self.C.loader.phase_video_feat_fpath_tpl.format(self.C.corpus,
                                                                     self.C.corpus +
                                                                     '_' +

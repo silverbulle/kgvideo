@@ -53,6 +53,7 @@ class FeatureConfig(object):
     size = None
     feature_mode = None
     num_boxes = 50
+    three_turple = 3
     # model = models[0]
     if model == 'MSVD_I3D' or model == 'MSR-VTT_I3D':
         size = 1024
