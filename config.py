@@ -46,7 +46,7 @@ class FeatureConfig(object):
     # model = "MSR-VTT_ResNet152"
     # model = "MSR-VTT_ResNet152+I3D"
     # model = "MSR-VTT_ResNet152+I3D+OFeat"
-    model = "MSR-VTT_ResNet152+I3D+OFeat+Rel"
+    model = "MSR-VTT_ResNet152+I3D+OFeat+rel"
     # model = "MSVD_ResNet152+I3D"
     # model = "MSVD_InceptionV4+I3D"
     # model = "MSVD_I3D"
@@ -72,7 +72,7 @@ class FeatureConfig(object):
     elif model == 'MSR-VTT_ResNet152+I3D+OFeat':
         size = [2048, 1024, 1028]
         feature_mode = 'three'
-    elif model == 'MSR-VTT_ResNet152+I3D+OFeat+Rel':
+    elif model == 'MSR-VTT_ResNet152+I3D+OFeat+rel':
         size = [2048, 1024, 1028, 300]
         feature_mode = 'four'
     else:
@@ -150,6 +150,7 @@ class TrainConfig(object):
     corpus = 'MSR-VTT';
     assert corpus in ['MSVD', 'MSR-VTT']
     msrvtt_dim = 1028
+    rel_dim = 300
     # corpus = 'MSVD';
     # assert corpus in ['MSVD', 'MSR-VTT']
 

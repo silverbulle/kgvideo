@@ -77,6 +77,11 @@ class CustomDataset(Dataset):
             self.image_video_feats = defaultdict(lambda: [])
             self.motion_video_feats = defaultdict(lambda: [])
             self.object_video_feats = defaultdict(lambda: [])
+        elif self.feature_mode == 'four':
+            self.image_video_feats = defaultdict(lambda: [])
+            self.motion_video_feats = defaultdict(lambda: [])
+            self.object_video_feats = defaultdict(lambda: [])
+            self.rel_feats = defaultdict(lambda: [])
 
         self.captions = defaultdict(lambda: [])
         self.data = []
@@ -115,6 +120,19 @@ class CustomDataset(Dataset):
                     feat) for feat in motion_video_feats]
                 object_video_feats = [self.transform_frame(
                     feat) for feat in object_video_feats]
+            if self.transform_caption:
+                caption = self.transform_caption(caption)
+        elif self.feature_mode == 'four':
+            vid, image_video_feats, motion_video_feats, object_video_feats, rel_feats, caption = self.data[idx]
+            if self.transform_frame:
+                image_video_feats = [self.transform_frame(
+                    feat) for feat in image_video_feats]
+                motion_video_feats = [self.transform_frame(
+                    feat) for feat in motion_video_feats]
+                object_video_feats = [self.transform_frame(
+                    feat) for feat in object_video_feats]
+                rel_feats = [self.transform_frame(
+                    feat) for feat in rel_feats]
             if self.transform_caption:
                 caption = self.transform_caption(caption)
 
@@ -252,6 +270,62 @@ class CustomDataset(Dataset):
             fin.close()
             fin_b.close()
 
+    def load_four_video_feats(self):
+        models = self.C.feat.model.split('_')[1].split('+')
+        print('Enter the load4 method---------------------------------')
+        for i in range(len(models)):
+            print('Begin to start load %d feats, total are %d' % (i + 1, len(models)))
+            frames = self.C.loader.frame_sample_len
+            # i = 2
+            if i == 2:
+                frames = self.C.feat.num_boxes
+            fpath = self.C.loader.phase_video_feat_fpath_tpl.format(self.C.corpus,
+                                                                    self.C.corpus +
+                                                                    '_' +
+                                                                    models[i],
+                                                                    self.phase)
+            fpath_b = self.C.loader.phase_video_feat_fpath_tpl.format(self.C.corpus,
+                                                                      self.C.corpus +
+                                                                      '_' +
+                                                                      'BFeat',
+                                                                      self.phase)  # load two feats at the sames
+            # time, there are some problems in efficiency
+            fin = h5py.File(fpath, 'r')
+            fin_b = h5py.File(fpath_b, 'r')
+            for vid in tqdm.tqdm(fin.keys()):
+                # vid = 'video122'
+                feats = fin[vid][()]
+                if len(feats) < frames:
+                    if i == 2:
+                        # fin_o = h5py.File(fpath, 'r')
+
+                        feats = self.load_object_feats(frames=frames, fin_o=fin, fin_b=fin_b, vid=vid)
+                        self.object_video_feats[vid].append(feats)
+                        # print("Finish the OFeat and BFeat load!  break from load_three_video_feats method")
+                        continue
+                    num_paddings = frames - len(feats)
+                    if feats.size == 0:
+                        # for _ in range(num_paddings):
+                        feats = np.zeros((frames, 1024))  # now just object feat may appear the feature is empty
+                    else:
+                        feats = feats.tolist() + [np.zeros_like(feats[0])
+                                                  for _ in range(num_paddings)]
+                    # feats = feats.tolist() + [np.zeros_like(feats[0])
+                    #                           for _ in range(num_paddings)]
+                    feats = np.asarray(feats)
+                    sampled_idxs = np.linspace(
+                        0, len(feats) - 1, frames, dtype=int)  # return evenly sapced number within the specified
+                    feats = feats[sampled_idxs]
+                    assert len(feats) == frames
+                    if i == 0:
+                        self.image_video_feats[vid].append(feats)
+                    elif i == 1:
+                        self.motion_video_feats[vid].append(feats)
+                    elif i == 3:
+                        self.rel_feats[vid].append(feats)
+            fin.close()
+            fin_b.close()
+
     def load_captions(self):
         raise NotImplementedError("You should implement this function.")
 
@@ -274,9 +348,11 @@ class CustomDataset(Dataset):
                         (vid, image_video_feats, motion_video_feats, caption))
         elif self.feature_mode == 'three':
             self.load_three_video_feats()
-            # assert self.image_video_feats.keys() == self.object_video_feats.keys(), "Image feats is not match with object feats"
-            # assert self.motion_video_feats.keys() == self.object_video_feats.keys(), "Motion feats is not match with object feats"
-            assert self.image_video_feats.keys() == self.motion_video_feats.keys(), "Image feats is not match with motion feats"
+            # assert self.image_video_feats.keys() == self.object_video_feats.keys(), "Image feats is not match with
+            # object feats" assert self.motion_video_feats.keys() == self.object_video_feats.keys(), "Motion feats is
+            # not match with object feats"
+            assert self.image_video_feats.keys() == self.motion_video_feats.keys(), "Image feats is not match with " \
+                                                                                    "motion feats "
             for vid in self.image_video_feats.keys():
                 image_video_feats = self.image_video_feats[vid]
                 motion_video_feats = self.motion_video_feats[vid]
@@ -287,6 +363,25 @@ class CustomDataset(Dataset):
                     # self.C.FeatureConfig.size[-1]
                 for caption in self.captions[vid]:
                     self.data.append((vid, image_video_feats, motion_video_feats, object_video_feats, caption))
+        elif self.feature_mode == 'four':
+            self.load_four_video_feats()
+            assert self.image_video_feats.keys() == self.motion_video_feats.keys(), "Image feats is not match with " \
+                                                                                    "motion feats "
+            for vid in self.image_video_feats.keys():
+                image_video_feats = self.image_video_feats[vid]
+                motion_video_feats = self.motion_video_feats[vid]
+                if self.object_video_feats[vid]:
+                    object_video_feats = self.object_video_feats[vid]
+                else:
+                    object_video_feats = list(np.zeros((1, self.C.feat.num_boxes, self.C.msrvtt_dim)))
+                if self.rel_feats[vid]:
+                    rel_feats = self.rel_feats[vid]
+                else:
+                    rel_feats = list(np.zeros((1, self.C.feat.num_boxes, self.C.rel_dim)))
+                    # self.C.FeatureConfig.size[-1]
+                for caption in self.captions[vid]:
+                    self.data.append(
+                        (vid, image_video_feats, motion_video_feats, object_video_feats, rel_feats, caption))
         else:
             raise NotImplementedError(
                 "Unknown feature mode: {}".format(self.feature_mode))
@@ -376,6 +471,37 @@ class Corpus(object):
             transform_caption=self.transform_caption)
         return dataset
 
+    def four_feature_collate_fn(self, batch):
+        vids, image_video_feats, motion_video_feats, object_video_feats, rel_feats, captions = zip(*batch)
+        image_video_feats_list = zip(*image_video_feats)
+        motion_video_feats_list = zip(*motion_video_feats)
+        object_video_feats_list = zip(*object_video_feats)
+        rel_feats_list = zip(*rel_feats)
+
+        image_video_feats_list = [torch.stack(
+            video_feats) for video_feats in image_video_feats_list]
+        image_video_feats_list = [video_feats.float()
+                                  for video_feats in image_video_feats_list]
+
+        motion_video_feats_list = [torch.stack(
+            video_feats) for video_feats in motion_video_feats_list]
+        motion_video_feats_list = [video_feats.float()
+                                   for video_feats in motion_video_feats_list]
+
+        object_video_feats_list = [torch.stack(
+            video_feats) for video_feats in object_video_feats_list]
+        object_video_feats_list = [video_feats.float()
+                                   for video_feats in object_video_feats_list]
+
+        rel_feats_list = [torch.stack(
+            video_feats) for video_feats in rel_feats_list]
+        rel_feats_list = [video_feats.float()
+                          for video_feats in rel_feats_list]
+        captions = torch.stack(captions)
+        captions = captions.float()
+
+        return vids, image_video_feats_list, motion_video_feats_list, object_video_feats_list, rel_feats_list, captions
+
     def three_feature_collate_fn(self, batch):
         vids, image_video_feats, motion_video_feats, object_video_feats, captions = zip(*batch)
         image_video_feats_list = zip(*image_video_feats)
@@ -449,6 +575,8 @@ class Corpus(object):
             collate_fn = self.two_feature_collate_fn
         elif self.feature_mode == 'three':
             collate_fn = self.three_feature_collate_fn
+        elif self.feature_mode == 'four':
+            collate_fn = self.four_feature_collate_fn
         else:
             raise NotImplementedError(
                 "Unknown feature mode: {}".format(self.feature_mode))

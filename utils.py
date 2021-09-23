@@ -62,6 +62,19 @@ def parse_batch(batch, feature_mode):
         captions = captions.long().cuda()
         feats = (image_feats, motion_feats, object_feats)
         return vids, feats, captions
+    elif feature_mode == 'four':
+        vids, image_feats, motion_feats, object_feats, rel_feats, captions = batch
+        image_feats = [feat.cuda() for feat in image_feats]
+        image_feats = torch.cat(image_feats, dim=2)
+        motion_feats = [feat.cuda() for feat in motion_feats]
+        motion_feats = torch.cat(motion_feats, dim=2)
+        object_feats = [feat.cuda() for feat in object_feats]
+        object_feats = torch.cat(object_feats, dim=2)
+        rel_feats = [feat.cuda() for feat in rel_feats]
+        rel_feats = torch.cat(rel_feats, dim=2)
+        captions = captions.long().cuda()
+        feats = (image_feats, motion_feats, object_feats, rel_feats)
+        return vids, feats, captions
     else:
         raise NotImplementedError("Unknown feature mode: {}".format(feature_mode))
 
@@ -149,6 +162,10 @@ def get_predicted_captions(data_iter, model, feature_mode):
                 for vid, image_feat, motion_feat, object_feat in zip(vids, feats[0], feats[1], feats[2]):
                     if vid not in onlyonce_dataset:
                         onlyonce_dataset[vid] = (image_feat, motion_feat, object_feat)
+            elif feature_mode == 'four':
+                for vid, image_feat, motion_feat, object_feat, rel_feat in zip(vids, feats[0], feats[1], feats[2], feat[3]):
+                    if vid not in onlyonce_dataset:
+                        onlyonce_dataset[vid] = (image_feat, motion_feat, object_feat, rel_feat)
             # del vids, feats, _
             # print('waiting------------------------, i\'m trying to solve this------')
         onlyonce_iter = []
@@ -177,6 +194,18 @@ def get_predicted_captions(data_iter, model, feature_mode):
                     object_feats.append(object_feat)
                 onlyonce_iter.append((vids[:batch_size],
                                       (torch.stack(image_feats), torch.stack(motion_feats), torch.stack(object_feats))))
+            elif feature_mode == 'four':
+                image_feats = []
+                motion_feats = []
+                object_feats = []
+                rel_feats = []
+                for image_feature, motion_feature, object_feat in feats[:batch_size]:
+                    image_feats.append(image_feature)
+                    motion_feats.append(motion_feature)
+                    object_feats.append(object_feat)
+                    rel_feats.append(rel_feat)
+                onlyonce_iter.append((vids[:batch_size],
+                                      (torch.stack(image_feats), torch.stack(motion_feats), torch.stack(object_feats), torch.stack(rel_feats))))
             vids = vids[batch_size:]
             feats = feats[batch_size:]
         return onlyonce_iter
