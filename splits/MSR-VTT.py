@@ -41,7 +41,7 @@ def load_splits():
 def save_video(fpath, vids, videos):
     fout = h5py.File(fpath, 'w')
     for vid in vids:
-        fout[vid] = videos[vid].value
+        fout[vid] = videos[vid]()
     fout.close()
     print("Saved {}".format(fpath))
 

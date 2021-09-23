@@ -22,8 +22,9 @@ class MSVDSplitConfig(object):
 class MSRVTTSplitConfig(object):
     # model = "MSR-VTT_ResNet152"
     # model = "MSR-VTT_I3D"
-    model = "MSR-VTT_BFeat"
+    # model = "MSR-VTT_BFeat"
     # model = "MSR-VTT_OFeat"
+    model = "MSR-VTT_rel"
 
     video_fpath = "../data/MSR-VTT/features/{}.hdf5".format(model)
     train_val_caption_fpath = "../data/MSR-VTT/metadata/train_val_videodatainfo.json"
@@ -44,7 +45,8 @@ class FeatureConfig(object):
     # model = "MSVD_ResNet152"
     # model = "MSR-VTT_ResNet152"
     # model = "MSR-VTT_ResNet152+I3D"
-    model = "MSR-VTT_ResNet152+I3D+OFeat"
+    # model = "MSR-VTT_ResNet152+I3D+OFeat"
+    model = "MSR-VTT_ResNet152+I3D+OFeat+Rel"
     # model = "MSVD_ResNet152+I3D"
     # model = "MSVD_InceptionV4+I3D"
     # model = "MSVD_I3D"
@@ -71,7 +73,7 @@ class FeatureConfig(object):
         size = [2048, 1024, 1028]
         feature_mode = 'three'
     elif model == 'MSR-VTT_ResNet152+I3D+OFeat+Rel':
-        size = [2048, 1024, 1028, 512]
+        size = [2048, 1024, 1028, 300]
         feature_mode = 'four'
     else:
         raise NotImplementedError("Unknown model: {}".format(model))
