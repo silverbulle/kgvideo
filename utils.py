@@ -163,7 +163,7 @@ def get_predicted_captions(data_iter, model, feature_mode):
                     if vid not in onlyonce_dataset:
                         onlyonce_dataset[vid] = (image_feat, motion_feat, object_feat)
             elif feature_mode == 'four':
-                for vid, image_feat, motion_feat, object_feat, rel_feat in zip(vids, feats[0], feats[1], feats[2], feat[3]):
+                for vid, image_feat, motion_feat, object_feat, rel_feat in zip(vids, feats[0], feats[1], feats[2], feats[3]):
                     if vid not in onlyonce_dataset:
                         onlyonce_dataset[vid] = (image_feat, motion_feat, object_feat, rel_feat)
             # del vids, feats, _
@@ -199,7 +199,7 @@ def get_predicted_captions(data_iter, model, feature_mode):
                 motion_feats = []
                 object_feats = []
                 rel_feats = []
-                for image_feature, motion_feature, object_feat in feats[:batch_size]:
+                for image_feature, motion_feature, object_feat, rel_feat in feats[:batch_size]:
                     image_feats.append(image_feature)
                     motion_feats.append(motion_feature)
                     object_feats.append(object_feat)
