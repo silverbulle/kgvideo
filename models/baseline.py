@@ -312,6 +312,16 @@ class Decoder(nn.Module):
 
 def pad_mask(src, trg, pad_idx):
     if isinstance(src, tuple):  # src means features ,if it's tuple, means use different feat
+        if len(src) == 4:
+            src_image_mask = (src[0][:, :, 0] != pad_idx).unsqueeze(1)
+            src_motion_mask = (src[1][:, :, 0] != pad_idx).unsqueeze(1)
+            src_object_mask = (src[2][:, :, 0] != pad_idx).unsqueeze(1)
+            src_rel_mask = (src[3][:, :, 0] != pad_idx).unsqueeze(1)
+            enc_src_mask = (src_image_mask, src_motion_mask, src_object_mask, src_rel_mask)
+            dec_src_mask = src_image_mask & src_motion_mask
+            # dec_src_mask = dec_src_mask & src_object_mask
+            src_mask = (enc_src_mask, dec_src_mask)
+            # print('shape of src_maks is ' + str(len(src_mask)))
         if len(src) == 3:
             src_image_mask = (src[0][:, :, 0] != pad_idx).unsqueeze(1)
             src_motion_mask = (src[1][:, :, 0] != pad_idx).unsqueeze(1)
@@ -391,6 +401,11 @@ class Transformer(nn.Module):
             self.image_src_embed = FeatEmbedding(d_feat[0], d_model, dropout)
             self.motion_src_embed = FeatEmbedding(d_feat[1], d_model, dropout)
             self.object_src_embed = FeatEmbedding(d_feat[2], d_model, dropout)
+        elif feature_mode == 'four':
+            self.image_src_embed = FeatEmbedding(d_feat[0], d_model, dropout)
+            self.motion_src_embed = FeatEmbedding(d_feat[1], d_model, dropout)
+            self.object_src_embed = FeatEmbedding(d_feat[2], d_model, dropout)
+            self.rel_src_embed = FeatEmbedding(d_feat[3], d_model, dropout)
         self.tgt_embed = TextEmbedding(vocab.n_vocabs, d_model)
         # self.tgt_embed = TextEmbedding(vocab, d_model)
         self.pos_embedding = PositionalEncoding(d_model, dropout)
@@ -414,13 +429,14 @@ class Transformer(nn.Module):
         if self.feature_mode == 'one':
             encoding_outputs = self.encode(src, src_mask)
             output = self.decode(trg, encoding_outputs, src_mask, trg_mask)
-        elif self.feature_mode == 'two' or 'three':
+        elif self.feature_mode == 'two' or 'three' or 'four':
             enc_src_mask, dec_src_mask = src_mask
-            # print('mask is ' + str(mask) + '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&' + str(type(mask)))  # tuple
-            # print('src_mask is ' + str(src_mask) + '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!' + str(type(src_mask)))  # tuple
-            # print('trg_mask is ' + str(trg_mask) + '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@' + str(type(trg_mask)))  # tensor
-            # print('enc_src_mask is ' + str(enc_src_mask) + '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!' + str(type(enc_src_mask)))  # tuple
-            # print('dec_src_mask is ' + str(dec_src_mask) + '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!' + str(type(dec_src_mask)))  # tensor
+            # print('mask is ' + str(mask) + '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&' + str(type(mask)))
+            # tuple print('src_mask is ' + str(src_mask) + '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!' + str(type(
+            # src_mask)))  # tuple print('trg_mask is ' + str(trg_mask) + '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@' +
+            # str(type(trg_mask)))  # tensor print('enc_src_mask is ' + str(enc_src_mask) +
+            # '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!' + str(type(enc_src_mask)))  # tuple print('dec_src_mask is ' +
+            # str(dec_src_mask) + '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!' + str(type(dec_src_mask)))  # tensor
             encoding_outputs = self.encode(src, enc_src_mask)
             # print('output is ' + str(encoding_outputs) + str(type(encoding_outputs)))  # tensor
             output = self.decode(trg, encoding_outputs, dec_src_mask, trg_mask)
@@ -457,8 +473,21 @@ class Transformer(nn.Module):
             x3 = self.object_src_embed(src[2])
             x3 = self.pos_embedding(x3)
             x3 = self.encoder(x3, src_mask[2])
+        elif self.feature_mode == 'four':
+            x1 = self.image_src_embed(src[0])
+            x1 = self.pos_embedding(x1)
+            x1 = self.encoder(x1, src_mask[0])
+            x2 = self.motion_src_embed(src[1])
+            x2 = self.pos_embedding(x2)
+            x2 = self.encoder(x2, src_mask[1])
+            x3 = self.object_src_embed(src[2])
+            x3 = self.pos_embedding(x3)
+            x3 = self.encoder(x3, src_mask[2])
+            x4 = self.rel_src_embed(src[3])
+            x4 = self.pos_embedding(x4)
+            x4 = self.encoder(x4, src_mask[3])
             # print('----------Encoder x3 len is ' + str(len(x3)))
-            return x1 + x2 + x3
+            return x1 + x2 + x3 + x4
 
     def decode(self, trg, memory, src_mask, trg_mask):
         x = self.tgt_embed(trg)
@@ -521,7 +550,12 @@ class Transformer(nn.Module):
             enc_src_mask = src_mask[0]
             dec_src_mask = src_mask[1]
             model_encodings = self.encode(src, enc_src_mask)
-        
+        elif self.feature_mode == 'four':
+            batch_size = src[0].shape[0]
+            enc_src_mask = src_mask[0]
+            dec_src_mask = src_mask[1]
+            model_encodings = self.encode(src, enc_src_mask)
+
         "model_encodings has shape (batch_size, sentence_len, d_model)"
     
         # 1.2 Setup Tgt Hypothesis Tracking
@@ -561,7 +595,7 @@ class Transformer(nn.Module):
                 model_encodings_l += [model_encodings[i:i + 1]] * cur_beam_size
                 if self.feature_mode == 'one':
                     src_mask_l += [src_mask[i:i + 1]] * cur_beam_size
-                elif self.feature_mode == 'two' or 'three':
+                elif self.feature_mode == 'two' or 'three' or 'four':
                     src_mask_l += [dec_src_mask[i:i + 1]] * cur_beam_size
             "shape (sum(4 bt * cur_beam_sz_i), 1 dec_sent_len, 128 d_model)"
             model_encodings_cur = torch.cat(model_encodings_l, dim=0)
@@ -571,7 +605,7 @@ class Transformer(nn.Module):
             if self.feature_mode == 'one':
                 out = self.decode(Variable(y_tm1).to(self.device), model_encodings_cur, src_mask_cur,
                                   Variable(subsequent_mask(y_tm1.size(-1)).type_as(src.data)).to(self.device))
-            elif self.feature_mode == 'two' or 'three':
+            elif self.feature_mode == 'two' or 'three' or 'four':
                 out = self.decode(Variable(y_tm1).to(self.device), model_encodings_cur, src_mask_cur,
                                   Variable(subsequent_mask(y_tm1.size(-1)).type_as(src[0].data)).to(self.device))
             "shape (sum(4 bt * cur_beam_sz_i), 1 dec_sent_len, 50002 vocab_sz)"
